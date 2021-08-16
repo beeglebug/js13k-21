@@ -53,6 +53,7 @@ function getImageData(image) {
   return ctx.getImageData(0, 0, image.width, image.height);
 }
 
+/** @global */
 function times(count, fn) {
   for (let i = 0; i < count; i++) {
     fn(i);

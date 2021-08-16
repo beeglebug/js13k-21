@@ -36,30 +36,31 @@ function bindInput(target) {
 
 /** @global */
 function handleInput() {
-  const v = { x: 0, y: 0 };
+  const { velocity } = player;
   const speed = 3;
+
+  zero(velocity);
+
   if (keyDown(KEY_W, KEY_Z, KEY_UP)) {
     // up
-    v.y -= speed;
+    velocity.y -= 1;
   }
 
   if (keyDown(KEY_S, KEY_DOWN)) {
     // down
-    v.y += speed;
+    velocity.y += 1;
   }
 
   if (keyDown(KEY_A, KEY_Q, KEY_LEFT)) {
     // left
-    v.x -= speed;
+    velocity.x -= 1;
   }
 
   if (keyDown(KEY_D, KEY_RIGHT)) {
     // right
-    v.x += speed;
+    velocity.x += 1;
   }
 
-  normalize(v);
-
-  player.x += v.x * speed;
-  player.y += v.y * speed;
+  normalize(velocity);
+  multiply(velocity, speed);
 }

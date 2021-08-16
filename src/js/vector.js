@@ -4,9 +4,11 @@ const distanceSq = (v1, v2) => {
 };
 
 function rotate(v, radians) {
+  const c = Math.cos(radians);
+  const s = Math.sin(radians);
   let x = v.x;
-  v.x = v.x * Math.cos(radians) - v.y * Math.sin(radians);
-  v.y = x * Math.sin(radians) + v.y * Math.cos(radians);
+  v.x = v.x * c - v.y * s;
+  v.y = x * s + v.y * c;
   return v;
 }
 
@@ -15,6 +17,12 @@ function perp(v1, v2) {
   out.x = v1.y;
   out.y = -v1.x;
   return out;
+}
+
+function zero(v) {
+  v.x = 0;
+  v.y = 0;
+  return v;
 }
 
 function isZero(v) {

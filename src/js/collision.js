@@ -111,3 +111,18 @@ function rayLineSegmentIntersection(ray, start, end) {
 
   return null;
 }
+
+function getPixelMap(ctx, sx, sy, width, height) {
+  const map = [];
+  for (let iy = 0; iy < width; iy++) {
+    for (let ix = 0; ix < height; ix++) {
+      const x = sx + ix;
+      const y = sy + iy;
+      const pixel = ctx.getImageData(x, y, 1, 1);
+      if (map[y] === undefined) map[y] = [];
+      // opaque or transparent?
+      map[y][x] = pixel.data[3] === 0;
+    }
+  }
+  return map;
+}
