@@ -1,11 +1,11 @@
 function enemyShoot(enemy) {
-  const count = 5;
-  const spread = Math.PI / 2; // 90 degree arc
-  const increment = spread / count;
-  const initial = { x: 0, y: 1 };
-  const start = rotate(initial, -increment * Math.round(count / 2));
+  const count = 5
+  const spread = Math.PI / 2 // 90 degree arc
+  const increment = spread / count
+  const initial = { x: 0, y: 1 }
+  const start = rotate(initial, -increment * Math.round(count / 2))
   times(count, () => {
-    const velocity = { ...rotate(start, increment) };
+    const velocity = { ...rotate(start, increment) }
     const bullet = {
       x: enemy.x,
       y: enemy.y,
@@ -18,10 +18,10 @@ function enemyShoot(enemy) {
         y: 8,
       },
       velocity: multiply(velocity, 1.5),
-    };
-    scene.children.push(bullet);
-    enemyBullets.push(bullet);
-  });
+    }
+    scene.children.push(bullet)
+    enemyBullets.push(bullet)
+  })
   // rotate(initial, -0.05);
 }
 
@@ -41,7 +41,7 @@ function shoot() {
       x: 0,
       y: -5,
     },
-  };
-  scene.children.push(bullet);
-  bullets.push(bullet);
+  }
+  scene.children.push(bullet)
+  bullets.push(bullet)
 }

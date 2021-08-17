@@ -1,21 +1,21 @@
-const width = 240;
-const height = 426;
+const width = 240
+const height = 426
 
-const [canvas, ctx] = createCanvas(width, height);
+const [canvas, ctx] = createCanvas(width, height)
 
-document.getElementById("g").appendChild(canvas);
+document.getElementById('g').appendChild(canvas)
 
-bindInput(document);
+bindInput(document)
 
-let running = true;
+let running = true
 
-document.addEventListener("visibilitychange", () => {
-  running = document.visibilityState === "visible";
-});
+document.addEventListener('visibilitychange', () => {
+  running = document.visibilityState === 'visible'
+})
 
-const img = new Image();
-img.onload = init;
-img.src = "sprites.png";
+const img = new Image()
+img.onload = init
+img.src = 'sprites.png'
 
 const player = {
   x: width / 2,
@@ -34,10 +34,10 @@ const player = {
     x: 0,
     y: 0,
   },
-};
+}
 
-let bullets = [];
-let enemyBullets = [];
+let bullets = []
+let enemyBullets = []
 let enemies = [
   {
     x: width / 2,
@@ -46,6 +46,10 @@ let enemies = [
     height: 18,
     alive: true,
     hp: 5,
+    velocity: {
+      x: 0,
+      y: 0.5,
+    },
     sprite: {
       source: img,
 
@@ -53,100 +57,100 @@ let enemies = [
       y: 0,
     },
   },
-];
+]
 
 const scene = {
   x: 0,
   y: 0,
   children: [player, ...bullets, ...enemies, ...enemyBullets],
-};
+}
 
-let whiteSprites;
-let [sprites, spritesCtx] = createCanvas(256, 256);
-let pixelMaps = {};
+let whiteSprites
+let [sprites, spritesCtx] = createCanvas(256, 256)
+let pixelMaps = {}
 
 function init() {
-  whiteSprites = tint(img, "#FFFFFF");
-  spritesCtx.drawImage(img, 0, 0);
+  whiteSprites = tint(img, '#FFFFFF')
+  spritesCtx.drawImage(img, 0, 0)
 
-  pixelMaps.player = getPixelMap(spritesCtx, 0, 0, 32, 32);
+  pixelMaps.player = getPixelMap(spritesCtx, 0, 0, 32, 32)
   // console.log(pixelMaps);
-  ctx.translate(0.5, 0.5);
-  loop();
-  drawPlanet();
-  drawGreebles();
+
+  loop()
+  drawPlanet()
+  drawGreebles()
   setInterval(() => {
-    if (!running) return;
-    enemies.forEach((enemy) => enemyShoot(enemy));
+    if (!running) return
+    enemies.forEach((enemy) => enemyShoot(enemy))
     // flashSprite(player);
-  }, 600);
+  }, 600)
 }
 
 function flashSprite(target, delay = 100) {
-  const original = target.sprite.source;
-  target.sprite.source = whiteSprites;
-  setTimeout(() => (target.sprite.source = original), delay);
+  const original = target.sprite.source
+  if (original === whiteSprites) return
+  target.sprite.source = whiteSprites
+  setTimeout(() => (target.sprite.source = original), delay)
 }
 
-const world = { x: width / 2, y: height / 2, width, height };
+const world = { x: width / 2, y: height / 2, width, height }
 
 function loop() {
-  requestAnimationFrame(loop);
+  requestAnimationFrame(loop)
 
-  handleInput();
+  handleInput()
+  ;[player, ...enemies, ...bullets, ...enemyBullets].forEach((item) => {
+    item.x += item.velocity.x
+    item.y += item.velocity.y
+  })
 
-  [player, ...bullets, ...enemyBullets].forEach((item) => {
-    item.x += item.velocity.x;
-    item.y += item.velocity.y;
-  });
-
-  let playerHit = false;
+  let playerHit = false
 
   // collision
   enemyBullets.forEach((bullet) => {
     // world boundary
     if (collideRectRect(bullet, world) === false) {
-      bullet.alive = false;
-      return;
+      bullet.alive = false
+      return
     }
 
     // enemy bullets vs player
     if (collideRectRect(bullet, player)) {
-      bullet.alive = false;
-      playerHit = true;
+      bullet.alive = false
+      playerHit = true
     }
-  });
+  })
 
-  if (playerHit) flashSprite(player);
+  if (playerHit) flashSprite(player)
 
   bullets.forEach((bullet) => {
     // world boundary
     if (collideRectRect(bullet, world) === false) {
-      bullet.alive = false;
-      return;
+      bullet.alive = false
+      return
     }
 
     // player bullets vs enemies
     enemies.forEach((enemy) => {
       if (collideRectRect(bullet, enemy)) {
-        flashSprite(enemy);
-        enemy.hp -= 1;
+        flashSprite(enemy)
+        enemy.hp -= 1
         if (enemy.hp <= 0) {
-          enemy.alive = false;
+          enemy.alive = false
         }
-        bullet.alive = false;
+        bullet.alive = false
       }
-    });
-  });
+    })
+  })
 
   // get rid of dead stuff at end
-  enemies = enemies.filter(isAlive);
-  enemyBullets = enemyBullets.filter(isAlive);
-  bullets = bullets.filter(isAlive);
+  enemies = enemies.filter(isAlive)
+  enemyBullets = enemyBullets.filter(isAlive)
+  bullets = bullets.filter(isAlive)
 
-  scene.children = scene.children.filter(isAlive);
+  scene.children = scene.children.filter(isAlive)
 
-  render();
+  render()
 }
 
-const isAlive = (item) => item.alive;
+const isAlive = (item) => item.alive
