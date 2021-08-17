@@ -23,5 +23,9 @@
     "gulp-terser": "^1.2.0",
     "gulp-zip": "^4.2.0",
     "through": "^2.3.8"
+  },
+  "sprettier": {
+    "semi": false,
+    "singleQuote": true
   }
 }

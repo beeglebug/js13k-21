@@ -5,7 +5,7 @@ const [greebleCanvas2, ctx2] = createCanvas(256, 256);
 const rng = new RNG();
 
 function drawGreebles() {
-  document.body.appendChild(greebleCanvas);
+  // document.body.appendChild(greebleCanvas);
 
   greebleCtx.fillStyle = "#666666";
   greebleCtx.fillRect(0, 0, 256, 256);

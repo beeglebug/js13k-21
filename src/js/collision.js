@@ -126,3 +126,20 @@ function getPixelMap(ctx, sx, sy, width, height) {
   }
   return map;
 }
+
+function collideRectRect(r1, r2) {
+  // work out the half widths and half heights
+  var hw1 = r1.width / 2;
+  var hw2 = r2.width / 2;
+  var hh1 = r1.height / 2;
+  var hh2 = r2.height / 2;
+
+  // the distances between the two centers
+  var distance = abs(sub(r1, r2));
+
+  // the total widths and heights
+  var totalWidth = hw1 + hw2;
+  var totalHeight = hh1 + hh2;
+
+  return totalWidth > distance.x && totalHeight > distance.y;
+}

@@ -20,11 +20,13 @@ img.src = "sprites.png";
 const player = {
   x: width / 2,
   y: height - 50,
+  width: 32,
+  height: 32,
   alive: true,
+
   sprite: {
     source: img,
-    width: 32,
-    height: 32,
+
     x: 0,
     y: 0,
   },
@@ -40,11 +42,13 @@ let enemies = [
   {
     x: width / 2,
     y: 50,
+    width: 18,
+    height: 18,
     alive: true,
+    hp: 5,
     sprite: {
       source: img,
-      width: 18,
-      height: 18,
+
       x: 39,
       y: 0,
     },
@@ -67,14 +71,13 @@ function init() {
 
   pixelMaps.player = getPixelMap(spritesCtx, 0, 0, 32, 32);
   // console.log(pixelMaps);
-
+  ctx.translate(0.5, 0.5);
   loop();
   drawPlanet();
   drawGreebles();
   setInterval(() => {
     if (!running) return;
-    enemyShoot(enemies[0]);
-    console.log(scene.children.length);
+    enemies.forEach((enemy) => enemyShoot(enemy));
     // flashSprite(player);
   }, 600);
 }
@@ -84,6 +87,8 @@ function flashSprite(target, delay = 100) {
   target.sprite.source = whiteSprites;
   setTimeout(() => (target.sprite.source = original), delay);
 }
+
+const world = { x: width / 2, y: height / 2, width, height };
 
 function loop() {
   requestAnimationFrame(loop);
@@ -95,86 +100,53 @@ function loop() {
     item.y += item.velocity.y;
   });
 
+  let playerHit = false;
+
   // collision
   enemyBullets.forEach((bullet) => {
-    // collide world boundary
-    if (bullet.x < 0 || bullet.x > width || bullet.y > height || bullet.y < 0) {
+    // world boundary
+    if (collideRectRect(bullet, world) === false) {
       bullet.alive = false;
+      return;
+    }
+
+    // enemy bullets vs player
+    if (collideRectRect(bullet, player)) {
+      bullet.alive = false;
+      playerHit = true;
     }
   });
 
-  enemyBullets = enemyBullets.filter((item) => item.alive);
-  scene.children = scene.children.filter((item) => item.alive);
+  if (playerHit) flashSprite(player);
+
+  bullets.forEach((bullet) => {
+    // world boundary
+    if (collideRectRect(bullet, world) === false) {
+      bullet.alive = false;
+      return;
+    }
+
+    // player bullets vs enemies
+    enemies.forEach((enemy) => {
+      if (collideRectRect(bullet, enemy)) {
+        flashSprite(enemy);
+        enemy.hp -= 1;
+        if (enemy.hp <= 0) {
+          enemy.alive = false;
+        }
+        bullet.alive = false;
+      }
+    });
+  });
+
+  // get rid of dead stuff at end
+  enemies = enemies.filter(isAlive);
+  enemyBullets = enemyBullets.filter(isAlive);
+  bullets = bullets.filter(isAlive);
+
+  scene.children = scene.children.filter(isAlive);
 
   render();
 }
 
-function enemyShoot(enemy) {
-  const count = 5;
-  const spread = Math.PI / 2; // 90 degree arc
-  const increment = spread / count;
-  const initial = { x: 0, y: 1 };
-  const start = rotate(initial, -increment * Math.round(count / 2));
-  times(count, () => {
-    const velocity = { ...rotate(start, increment) };
-    const bullet = {
-      x: enemy.x,
-      y: enemy.y,
-      alive: true,
-      sprite: {
-        source: img,
-        x: 32,
-        y: 8,
-        width: 5,
-        height: 5,
-      },
-      velocity: multiply(velocity, 1.5),
-    };
-    scene.children.push(bullet);
-    enemyBullets.push(bullet);
-  });
-  // rotate(initial, -0.05);
-}
-
-function shoot() {
-  const bullet = {
-    x: player.x,
-    y: player.y,
-    alive: true,
-    sprite: {
-      source: img,
-      x: 32,
-      y: 0,
-      width: 4,
-      height: 7,
-    },
-    velocity: {
-      x: 0,
-      y: -5,
-    },
-  };
-  scene.children.push(bullet);
-  bullets.push(bullet);
-}
-
-function render() {
-  ctx.fillRect(0, 0, width, height);
-
-  ctx.drawImage(planetCanvas, 0, 0, 512, 512);
-
-  scene.children.forEach((child) => {
-    const { x, y, sprite } = child;
-    const { x: sx, y: sy, width, height, source } = sprite;
-    ctx.drawImage(
-      source,
-      sx,
-      sy,
-      width,
-      height,
-      x - Math.floor(width / 2),
-      y - Math.floor(height / 2),
-      width,
-      height
-    );
-  });
-}
+const isAlive = (item) => item.alive;
