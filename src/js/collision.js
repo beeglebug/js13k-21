@@ -1,145 +1,136 @@
-function closestPointRect(point, rect, output = { x: 0, y: 0 }) {
-  if (point.x < rect.x) {
-    output.x = rect.x
-  } else if (point.x > rect.x + rect.width) {
-    output.x = rect.x + rect.width
-  } else {
-    output.x = point.x
-  }
-
-  if (point.y < rect.y) {
-    output.y = rect.y
-  } else if (point.y > rect.y + rect.height) {
-    output.y = rect.y + rect.height
-  } else {
-    output.y = point.y
-  }
-
-  return output
-}
-
-function closestPointCircle(point, circle, output = { x: 0, y: 0 }) {
-  output.x = point.x
-  output.y = point.y
-
-  if (!pointInCircle(point, circle)) {
-    output.x -= circle.x
-    output.y -= circle.y
-
-    setMagnitude(output, circle.radius)
-
-    output.x += circle.x
-    output.y += circle.y
-  }
-
-  return output
-}
-
-function collideCircleRect(circle, rect) {
-  const point = closestPointRect(circle, rect)
-
-  if (!pointInCircle(point, circle)) return false
-
-  const distance = distanceTo(point, circle)
-  const depth = circle.radius - distance
-
-  const normal = normalize({
-    x: circle.x - point.x,
-    y: circle.y - point.y,
-  })
-
-  // TODO handle point inside, normal is whack
-  if (normal.x === 0 && normal.y === 0) {
-    // debugger
-  }
-
-  return {
-    ...point,
-    normal,
-    depth,
-  }
-}
-
-function collideCircleCircle(circle1, circle2) {
-  const dx = circle1.x - circle2.x
-  const dy = circle1.y - circle2.y
-  const dr = circle1.radius + circle2.radius
-
-  // no need for sqrt
-  const distance = dx * dx + dy * dy
-  const r2 = dr * dr
-
-  if (distance.toFixed(5) >= r2.toFixed(5)) return false
-
-  const point = closestPointCircle(circle1, circle2)
-
-  const normal = normalize({
-    x: dx,
-    y: dy,
-  })
-
-  const depth = circle1.radius - distanceTo(circle1, point)
-
-  return {
-    ...point,
-    normal,
-    depth,
-  }
-}
-
-function pointInCircle(point, circle) {
-  const dx = Math.abs(circle.x - point.x)
-  const dy = Math.abs(circle.y - point.y)
-
-  return dx * dx + dy * dy < circle.radius * circle.radius
-}
-
-function rayLineSegmentIntersection(ray, start, end) {
-  const v1 = sub(ray, start)
-  const v2 = sub(end, start)
-  const v3 = { x: -ray.direction.y, y: ray.direction.x }
-
-  const d = dot(v2, v3)
-
-  // check for parallel
-  if (Math.abs(d) < 0.000001) return null
-
-  const t1 = cross(v2, v1) / d
-  const t2 = dot(v1, v3) / d
-
-  if (t1 >= 0 && t2 >= 0 && t2 <= 1) return t1
-
-  return null
-}
-
 function getPixelMap(ctx, sx, sy, width, height) {
-  const map = []
-  for (let iy = 0; iy < width; iy++) {
-    for (let ix = 0; ix < height; ix++) {
-      const x = sx + ix
-      const y = sy + iy
-      const pixel = ctx.getImageData(x, y, 1, 1)
-      if (map[y] === undefined) map[y] = []
+  const map = [];
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      const pixel = ctx.getImageData(sx + x, sy + y, 1, 1);
+      if (map[y] === undefined) map[y] = [];
       // opaque or transparent?
-      map[y][x] = pixel.data[3] === 0
+      map[y][x] = pixel.data[3] !== 0;
     }
   }
-  return map
+  return map;
+}
+
+function collidePixels(entity1, entity2, rect) {
+  // calculate offsets from sprite to overlap
+  const rx = rect.x - rect.width / 2;
+  const ry = rect.y - rect.height / 2;
+
+  const ox1 = Math.floor(rx - (entity1.x - entity1.width / 2));
+  const oy1 = Math.floor(ry - (entity1.y - entity1.height / 2));
+  const ox2 = Math.floor(rx - (entity2.x - entity2.width / 2));
+  const oy2 = Math.floor(ry - (entity2.y - entity2.height / 2));
+
+  // loop over the overlap pixels, if both are solid we have a collision
+  for (let iy = 0; iy < Math.floor(rect.height); iy++) {
+    for (let ix = 0; ix < Math.floor(rect.width); ix++) {
+      // probably a better way to do this but whatever
+      const x1 = clamp(ix + ox1, 0, Infinity);
+      const y1 = clamp(iy + oy1, 0, Infinity);
+      const x2 = clamp(ix + ox2, 0, Infinity);
+      const y2 = clamp(iy + oy2, 0, Infinity);
+      const p1 = entity1.pixelMap[y1][x1];
+      const p2 = entity2.pixelMap[y2][x2];
+      if (p1 === true && p2 === true) return true;
+    }
+  }
+  return false;
 }
 
 function collideRectRect(r1, r2) {
   // work out the half widths and half heights
-  var hw1 = r1.width / 2
-  var hw2 = r2.width / 2
-  var hh1 = r1.height / 2
-  var hh2 = r2.height / 2
+  // this is because our rect x/y is the center so we need to do a little funky maths compares to normal top/left
+  const hw1 = r1.width / 2;
+  const hw2 = r2.width / 2;
+  const hh1 = r1.height / 2;
+  const hh2 = r2.height / 2;
 
-  // the distances between the two centers
-  var distance = abs(sub(r1, r2))
+  // extreme points of the union of the two rects
+  const minX = Math.min(r1.x - hw1, r2.x - hw2);
+  const maxX = Math.max(r1.x + hw1, r2.x + hw2);
 
-  // the total widths and heights
-  var totalWidth = hw1 + hw2
-  var totalHeight = hh1 + hh2
+  const minY = Math.min(r1.y - hh1, r2.y - hh2);
+  const maxY = Math.max(r1.y + hh1, r2.y + hh2);
 
-  return totalWidth > distance.x && totalHeight > distance.y
+  // size of the union rect
+  const unionWidth = maxX - minX;
+  const unionHeight = maxY - minY;
+
+  const totalWidth = r1.width + r2.width;
+  const totalHeight = r1.height + r2.height;
+
+  // need to intersect on BOTH axis to count as an overlap
+  const collision = totalWidth > unionWidth && totalHeight > unionHeight;
+
+  if (collision === false) return false;
+
+  // get the intersection rect
+  const left = Math.max(r1.x - hw1, r2.x - hw2);
+  const top = Math.max(r1.y - hh1, r2.y - hh2);
+
+  const width = totalWidth - unionWidth;
+  const height = totalHeight - unionHeight;
+
+  return {
+    x: left + width / 2,
+    y: top + height / 2,
+    width,
+    height,
+  };
+}
+
+function collision() {
+  let playerHit = false;
+
+  // collision
+  enemyBullets.forEach((bullet) => {
+    // world boundary
+    if (collideRectRect(bullet, world) === false) {
+      bullet.alive = false;
+      return;
+    }
+
+    // enemy bullets vs player
+    const collision = collideRectRect(bullet, player);
+    if (collision) {
+      const pixelCollision = collidePixels(bullet, player, collision);
+      if (pixelCollision) {
+        bullet.alive = false;
+        playerHit = true;
+      }
+    }
+  });
+
+  if (playerHit) flashSprite(player);
+
+  bullets.forEach((bullet) => {
+    // world boundary
+    if (collideRectRect(bullet, world) === false) {
+      bullet.alive = false;
+      return;
+    }
+
+    // player bullets vs enemies
+    enemies.forEach((enemy) => {
+      const collision = collideRectRect(bullet, enemy);
+      if (collision) {
+        const pixelCollision = collidePixels(bullet, enemy, collision);
+        if (pixelCollision) {
+          bullet.alive = false;
+          flashSprite(enemy);
+          enemy.hp -= 1;
+          if (enemy.hp <= 0) {
+            enemy.alive = false;
+          }
+        }
+      }
+    });
+  });
+
+  // get rid of dead stuff at end
+  enemies = enemies.filter(isAlive);
+  enemyBullets = enemyBullets.filter(isAlive);
+  bullets = bullets.filter(isAlive);
+
+  scene.children = scene.children.filter(isAlive);
 }
