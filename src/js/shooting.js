@@ -13,11 +13,9 @@ function enemyShoot(enemy) {
       height: 5,
       alive: true,
       pixelMap: pixelMaps.enemyBullet,
-      sprite: {
-        source: img,
-        x: 32,
-        y: 8,
-      },
+      source: img,
+      sx: 32,
+      sy: 8,
       velocity: multiply(velocity, 1.5),
     };
     scene.children.push(bullet);
@@ -34,11 +32,9 @@ function shoot() {
     height: 7,
     alive: true,
     pixelMap: pixelMaps.bullet,
-    sprite: {
-      source: img,
-      x: 32,
-      y: 0,
-    },
+    source: img,
+    sx: 32,
+    sy: 0,
     velocity: {
       x: 0,
       y: -5,

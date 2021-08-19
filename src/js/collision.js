@@ -80,8 +80,6 @@ function collideRectRect(r1, r2) {
 }
 
 function collision() {
-  let playerHit = false;
-
   // collision
   enemyBullets.forEach((bullet) => {
     // world boundary
@@ -95,13 +93,12 @@ function collision() {
     if (collision) {
       const pixelCollision = collidePixels(bullet, player, collision);
       if (pixelCollision) {
+        flashSprite(player);
+        spawnImpact(collision.x, collision.y);
         bullet.alive = false;
-        playerHit = true;
       }
     }
   });
-
-  if (playerHit) flashSprite(player);
 
   bullets.forEach((bullet) => {
     // world boundary
@@ -116,6 +113,7 @@ function collision() {
       if (collision) {
         const pixelCollision = collidePixels(bullet, enemy, collision);
         if (pixelCollision) {
+          spawnImpact(collision.x, collision.y);
           bullet.alive = false;
           flashSprite(enemy);
           enemy.hp -= 1;

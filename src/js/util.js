@@ -36,3 +36,21 @@ function times(count, fn) {
 function clamp(value, min, max) {
   return Math.min(Math.max(value, min), max);
 }
+
+/** @global */
+function rgba(r, g, b, a) {
+  return `rgba(${r},${g},${b},${a})`;
+}
+
+let time = 0;
+let oldTime = 0;
+
+/** @global */
+function tick() {
+  // timing for input and FPS counter
+  oldTime = time;
+  time = performance.now();
+  let delta = (time - oldTime) / 1000; // time the last frame took in seconds
+  fps = 1 / delta;
+  return delta;
+}

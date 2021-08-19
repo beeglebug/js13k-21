@@ -2,16 +2,20 @@ const width = 240;
 const height = 426;
 const scale = 2;
 
+let running = true;
+
 const [canvas, ctx] = createCanvas(width, height);
 const [outputCanvas, outputCtx] = createCanvas(width * scale, height * scale);
+const [sprites, spritesCtx] = createCanvas(256, 256);
+
+let pixelMaps = {};
+let whiteSprites;
 
 outputCtx.imageSmoothingEnabled = false;
 
 document.getElementById("g").appendChild(outputCanvas);
 
 bindInput(document);
-
-let running = true;
 
 document.addEventListener("visibilitychange", () => {
   running = document.visibilityState === "visible";
@@ -27,18 +31,17 @@ const player = {
   width: 32,
   height: 32,
   alive: true,
-
-  sprite: {
-    source: img,
-
-    x: 0,
-    y: 0,
-  },
+  source: img,
+  sx: 0,
+  sy: 0,
   velocity: {
     x: 0,
     y: 0,
   },
 };
+
+let starsPosition = 0 - height;
+let planetPosition = -200;
 
 let bullets = [];
 let enemyBullets = [];
@@ -46,31 +49,67 @@ let enemies = [
   {
     x: width / 2,
     y: 50,
-    width: 18,
-    height: 18,
+    width: 14,
+    height: 14,
     alive: true,
     hp: 5,
     velocity: {
       x: 0,
-      y: 0.5,
-    },
-    sprite: {
-      source: img,
-      x: 39,
       y: 0,
     },
+    source: img,
+    sx: 37,
+    sy: 0,
   },
 ];
+
+const eFrame = engineFrames[0];
+const engineTrail1 = {
+  x: player.x,
+  y: player.y,
+  width: eFrame.width,
+  height: eFrame.height,
+  alive: true,
+  source: sprites,
+  sx: eFrame.x,
+  sy: eFrame.y,
+  frames: engineFrames,
+  currentFrame: 0,
+  counter: 0,
+  speed: 80,
+  loop: true,
+};
+
+const engineTrail2 = {
+  x: player.x,
+  y: player.y,
+  width: eFrame.width,
+  height: eFrame.height,
+  alive: true,
+  source: sprites,
+  sx: eFrame.x,
+  sy: eFrame.y,
+  frames: engineFrames,
+  currentFrame: 0,
+  counter: 0,
+  speed: 80,
+  loop: true,
+};
+
+animated.push(engineTrail1, engineTrail2);
 
 const scene = {
   x: 0,
   y: 0,
-  children: [player, ...bullets, ...enemies, ...enemyBullets],
+  children: [
+    player,
+    ...bullets,
+    ...enemies,
+    ...enemyBullets,
+    engineTrail1,
+    engineTrail2,
+  ],
 };
-
-let whiteSprites;
-let [sprites, spritesCtx] = createCanvas(256, 256);
-let pixelMaps = {};
 
 function init() {
   whiteSprites = tint(img, "#FFFFFF");
@@ -84,11 +123,30 @@ function init() {
   pixelMaps.enemy = getPixelMap(spritesCtx, 39, 0, 18, 18);
 
   player.pixelMap = pixelMaps.player;
-  enemies[0].pixelMap = pixelMaps.enemy;
+  enemies.forEach((enemy) => (enemy.pixelMap = pixelMaps.enemy));
 
   loop();
-  drawPlanet();
-  drawGreebles();
+  // drawPlanet();
+  // drawGreebles();
+
+  backgroundLayers = [
+    {
+      y: 0,
+      img: drawStars(2, 30, 0.8),
+      speed: 1.2,
+    },
+    {
+      y: 0,
+      img: drawStars(1, 100, 0.7),
+      speed: 1,
+    },
+    {
+      y: 0,
+      img: drawStars(1, 200, 0.6),
+      speed: 0.8,
+    },
+  ];
+
   setInterval(() => {
     if (!running) return;
     enemies.forEach((enemy) => enemyShoot(enemy));
@@ -99,6 +157,7 @@ const world = { x: width / 2, y: height / 2, width, height };
 
 function loop() {
   requestAnimationFrame(loop);
+  let delta = tick();
 
   handleInput();
 
@@ -108,6 +167,16 @@ function loop() {
       item.y += item.velocity.y;
     }
   });
+
+  // TODO remove when scene graph works
+  engineTrail1.x = player.x - 10;
+  engineTrail1.y = player.y + 7;
+
+  engineTrail2.x = player.x + 10;
+  engineTrail2.y = player.y + 7;
+
+  updateBackground();
+  updateAnimations(delta);
 
   collision();
 

@@ -1,11 +1,14 @@
+/** @global */
 function render() {
+  ctx.fillStyle = "#000000";
   ctx.fillRect(0, 0, width, height);
 
-  ctx.drawImage(planetCanvas, 0, 0, 512, 512);
+  renderBackground();
+
+  // ctx.drawImage(planetCanvas, 0, Math.floor(planetPosition), 512, 512);
 
   scene.children.forEach((child) => {
-    const { x, y, width, height, sprite } = child;
-    const { x: sx, y: sy, source } = sprite;
+    const { x, y, sx, sy, source, width, height } = child;
     ctx.drawImage(
       source,
       sx,
@@ -23,10 +26,10 @@ function render() {
 }
 
 function flashSprite(target, delay = 100) {
-  const original = target.sprite.source;
+  const original = target.source;
   if (original === whiteSprites) return;
-  target.sprite.source = whiteSprites;
-  setTimeout(() => (target.sprite.source = original), delay);
+  target.source = whiteSprites;
+  setTimeout(() => (target.source = original), delay);
 }
 
 function debug() {
