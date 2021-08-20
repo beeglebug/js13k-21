@@ -17,6 +17,7 @@ const downKeys = {};
 function bindInput(target) {
   target.addEventListener("keydown", ({ code }) => {
     if (code === KEY_SPACE && !downKeys[KEY_SPACE]) {
+      shootingClock.count = 0;
       shoot();
     }
     downKeys[code] = true;
@@ -34,7 +35,6 @@ function keyDown(...keys) {
 /** @global */
 function handleInput() {
   let velocity;
-  const speed = 3;
 
   if (touchTarget) {
     velocity = sub(touchTarget, player);
@@ -63,7 +63,7 @@ function handleInput() {
   }
 
   normalize(velocity);
-  multiply(velocity, speed);
+  multiply(velocity, player.speed);
 
   player.velocity = velocity;
 }

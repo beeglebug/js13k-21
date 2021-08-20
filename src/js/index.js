@@ -27,12 +27,14 @@ canvas.style.width = width * scale;
 canvas.style.height = height * scale;
 
 let touchTarget = null;
+
 const canvasPos = canvas.getBoundingClientRect();
 
 document.addEventListener("touchstart", (e) => {
-  const x = (e.touches[0].clientX - canvasPos.x) / scale;
-  const y = (e.touches[0].clientY - canvasPos.y) / scale;
-  touchTarget = { x, y };
+  touchTarget = {
+    x: (e.touches[0].clientX - canvasPos.x) / scale,
+    y: (e.touches[0].clientY - canvasPos.y) / scale,
+  };
 });
 
 document.addEventListener("touchend", () => {

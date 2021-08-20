@@ -43,7 +43,7 @@ function enemyShoot(enemy, count) {
   // rotate(initial, -0.05);
 }
 
-const shootingClock = new Clock(200, () => {
+const shootingClock = new Clock(100, () => {
   if (keyDown(KEY_SPACE) || touchTarget) {
     shoot();
   }

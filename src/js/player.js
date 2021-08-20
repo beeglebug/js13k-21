@@ -34,6 +34,7 @@ function createPlayer() {
     source: img,
     sx: 0,
     sy: 0,
+    speed: 4,
     velocity: {
       x: 0,
       y: 0,
