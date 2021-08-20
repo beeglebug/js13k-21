@@ -33,10 +33,14 @@ function keyDown(...keys) {
 
 /** @global */
 function handleInput() {
-  const { velocity } = player;
+  let velocity;
   const speed = 3;
 
-  zero(velocity);
+  if (touchTarget) {
+    velocity = sub(touchTarget, player);
+  } else {
+    velocity = zero(player.velocity);
+  }
 
   if (keyDown(KEY_W, KEY_Z, KEY_UP)) {
     // up
@@ -60,4 +64,6 @@ function handleInput() {
 
   normalize(velocity);
   multiply(velocity, speed);
+
+  player.velocity = velocity;
 }

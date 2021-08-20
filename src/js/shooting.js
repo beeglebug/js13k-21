@@ -44,7 +44,7 @@ function enemyShoot(enemy, count) {
 }
 
 const shootingClock = new Clock(200, () => {
-  if (keyDown(KEY_SPACE)) {
+  if (keyDown(KEY_SPACE) || touchTarget) {
     shoot();
   }
 });

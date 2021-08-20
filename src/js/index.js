@@ -17,10 +17,33 @@ document.addEventListener("visibilitychange", () => {
   running = document.visibilityState === "visible";
 });
 
+window.addEventListener("contextmenu", (e) => {
+  e.preventDefault();
+});
+
 const scale = Math.min(window.innerWidth / width, window.innerHeight / height);
 
 canvas.style.width = width * scale;
 canvas.style.height = height * scale;
+
+let touchTarget = null;
+const canvasPos = canvas.getBoundingClientRect();
+
+document.addEventListener("touchstart", (e) => {
+  const x = (e.touches[0].clientX - canvasPos.x) / scale;
+  const y = (e.touches[0].clientY - canvasPos.y) / scale;
+  touchTarget = { x, y };
+});
+
+document.addEventListener("touchend", () => {
+  touchTarget = null;
+});
+
+document.addEventListener("touchmove", (e) => {
+  const x = (e.changedTouches[0].clientX - canvasPos.x) / scale;
+  const y = (e.changedTouches[0].clientY - canvasPos.y) / scale;
+  touchTarget = { x, y };
+});
 
 const img = new Image();
 img.onload = init;

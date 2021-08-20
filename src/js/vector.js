@@ -41,6 +41,7 @@ function copy(v) {
   };
 }
 
+/** @global */
 function normalize(v) {
   // SAVING remove optimizations
   // optimizations to avoid magnitude sqrt
@@ -76,6 +77,7 @@ function add(v1, v2) {
   };
 }
 
+/** @global */
 function sub(v1, v2) {
   return {
     x: v1.x - v2.x,
@@ -83,6 +85,7 @@ function sub(v1, v2) {
   };
 }
 
+/** @global */
 function multiply(v, scalar) {
   v.x *= scalar;
   v.y *= scalar;
