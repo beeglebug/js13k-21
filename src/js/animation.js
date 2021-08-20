@@ -1,14 +1,14 @@
 const impactFrames = [
-  { x: 53, y: 0, width: 9, height: 9 },
-  { x: 62, y: 0, width: 9, height: 9 },
-  { x: 71, y: 0, width: 9, height: 9 },
+  { x: 45, y: 0, width: 9, height: 9 },
+  { x: 54, y: 0, width: 9, height: 9 },
+  { x: 63, y: 0, width: 9, height: 9 },
 ];
 
 const engineFrames = [
+  { x: 72, y: 0, width: 4, height: 6 },
+  { x: 76, y: 0, width: 4, height: 6 },
   { x: 80, y: 0, width: 4, height: 6 },
-  { x: 84, y: 0, width: 4, height: 6 },
-  { x: 88, y: 0, width: 4, height: 6 },
-  { x: 84, y: 0, width: 4, height: 6 },
+  { x: 76, y: 0, width: 4, height: 6 },
 ];
 
 let animated = [];

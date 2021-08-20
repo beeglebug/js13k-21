@@ -9,8 +9,8 @@ function spawnEnemies() {
     const enemy = {
       x: x + i * spacing,
       y: 50,
-      width: 14,
-      height: 14,
+      width: 10,
+      height: 10,
       alive: true,
       hp: 1,
       velocity: {
@@ -19,7 +19,7 @@ function spawnEnemies() {
       },
       source: sprites,
       pixelMap: pixelMaps.enemy,
-      sx: 37,
+      sx: 35,
       sy: 0,
     };
 
@@ -39,8 +39,8 @@ function updateEnemies(delta) {
 }
 
 class Clock {
-  count = 0;
   constructor(frequency, callback) {
+    this.count = 0;
     this.frequency = frequency;
     this.callback = callback;
   }

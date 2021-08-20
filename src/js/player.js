@@ -28,8 +28,8 @@ function createPlayer() {
   player = {
     x: width / 2,
     y: height - 150,
-    width: 32,
-    height: 32,
+    width: 30,
+    height: 17,
     alive: true,
     source: img,
     sx: 0,

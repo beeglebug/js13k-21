@@ -9,7 +9,7 @@ function enemyShootSingle(enemy) {
     alive: true,
     pixelMap: pixelMaps.enemyBullet,
     source: img,
-    sx: 32,
+    sx: 30,
     sy: 8,
     velocity: multiply(velocity, 1.5),
   };
@@ -33,7 +33,7 @@ function enemyShoot(enemy, count) {
       alive: true,
       pixelMap: pixelMaps.enemyBullet,
       source: img,
-      sx: 32,
+      sx: 30,
       sy: 8,
       velocity: multiply(velocity, 1.5),
     };
@@ -58,7 +58,7 @@ function shoot() {
     alive: true,
     pixelMap: pixelMaps.bullet,
     source: img,
-    sx: 32,
+    sx: 30,
     sy: 0,
     velocity: {
       x: 0,
