@@ -1,5 +1,24 @@
-function enemyShoot(enemy) {
-  const count = 5;
+function enemyShootSingle(enemy) {
+  const velocity = normalize(sub(player, enemy));
+
+  const bullet = {
+    x: enemy.x,
+    y: enemy.y,
+    width: 5,
+    height: 5,
+    alive: true,
+    pixelMap: pixelMaps.enemyBullet,
+    source: img,
+    sx: 32,
+    sy: 8,
+    velocity: multiply(velocity, 1.5),
+  };
+
+  scene.children.push(bullet);
+  enemyBullets.push(bullet);
+}
+
+function enemyShoot(enemy, count) {
   const spread = Math.PI / 2; // 90 degree arc
   const increment = spread / count;
   const initial = { x: 0, y: 1 };
@@ -23,6 +42,12 @@ function enemyShoot(enemy) {
   });
   // rotate(initial, -0.05);
 }
+
+const shootingClock = new Clock(200, () => {
+  if (keyDown(KEY_SPACE)) {
+    shoot();
+  }
+});
 
 function shoot() {
   const bullet = {

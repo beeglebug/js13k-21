@@ -125,6 +125,10 @@ function collision() {
     });
   });
 
+  // world boundary
+  player.x = clamp(player.x, 0, width);
+  player.y = clamp(player.y, 0, height);
+
   // get rid of dead stuff at end
   enemies = enemies.filter(isAlive);
   enemyBullets = enemyBullets.filter(isAlive);

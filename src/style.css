@@ -1,15 +1,22 @@
+* {
+  padding: 0;
+  margin: 0;
+}
 body {
-    margin: 0;
-    background: #222;
+  background: #222222;
+  overscroll-behavior: none;
 }
-div {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height:100vh;
+#g {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  overflow-x: hidden;
 }
-
 canvas {
-    image-rendering: pixelated;
+  image-rendering: pixelated;
+  object-fit: contain;
+  max-height: 100%;
+  max-width: 100%;
 }

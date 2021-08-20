@@ -19,13 +19,6 @@ function tint(image, fill, operation = "source-atop") {
 }
 
 /** @global */
-function getImageData(image) {
-  const [, ctx] = createCanvas(image.width, image.height);
-  ctx.drawImage(image, 0, 0);
-  return ctx.getImageData(0, 0, image.width, image.height);
-}
-
-/** @global */
 function times(count, fn) {
   for (let i = 0; i < count; i++) {
     fn(i);
@@ -53,4 +46,8 @@ function tick() {
   let delta = (time - oldTime) / 1000; // time the last frame took in seconds
   fps = 1 / delta;
   return delta;
+}
+
+function isAlive(item) {
+  return item.alive;
 }

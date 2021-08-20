@@ -68,6 +68,14 @@ function distanceTo(v1, v2) {
   return magnitude(sub(v1, v2));
 }
 
+/** @global */
+function add(v1, v2) {
+  return {
+    x: v1.x + v2.x,
+    y: v1.y + v2.y,
+  };
+}
+
 function sub(v1, v2) {
   return {
     x: v1.x - v2.x,
