@@ -1,31 +1,37 @@
-function spawnEnemies() {
-  let spacing = 40;
-  let count = 5;
+let enemyTemplates = {};
 
-  // off screen left
-  let x = 0 - spacing * count;
+function createEnemies() {
+  const baseEnemy = {
+    width: 10,
+    height: 10,
+    alive: true,
+    hp: 1,
+    source: sprites,
+    pixelMap: pixelMaps.enemy,
+    sx: 35,
+    sy: 0,
+    speed: 1.5,
+  };
+
+  enemyTemplates[0] = baseEnemy;
+}
+
+function spawnWave(wave) {
+  const { x, y, type, count, enemyType } = wave;
+
+  let spacing = 40;
 
   for (let i = 0; i < count; i++) {
+    const base = enemyTemplates[enemyType];
     const enemy = {
-      x: x + i * spacing,
-      y: 50,
-      width: 10,
-      height: 10,
-      alive: true,
-      hp: 1,
+      ...base,
+      x: x,
+      y: y - i * spacing,
       velocity: {
-        x: 1.5,
-        y: 0,
+        x: 0,
+        y: base.speed,
       },
-      source: sprites,
-      pixelMap: pixelMaps.enemy,
-      sx: 35,
-      sy: 0,
     };
-
-    enemy.clock = new Clock(1000, () => {
-      enemyShootSingle(enemy);
-    });
 
     scene.children.push(enemy);
     enemies.push(enemy);
@@ -34,7 +40,9 @@ function spawnEnemies() {
 
 function updateEnemies(delta) {
   enemies.forEach((enemy) => {
-    enemy.clock.update(delta);
+    if (enemy.clock) {
+      enemy.clock.update(delta);
+    }
   });
 }
 

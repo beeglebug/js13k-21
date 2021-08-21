@@ -125,6 +125,22 @@ function collision() {
     });
   });
 
+  // enemy vs player
+  enemies.forEach((enemy) => {
+    const collision = collideRectRect(enemy, player);
+    if (collision) {
+      const pixelCollision = collidePixels(enemy, player, collision);
+      if (pixelCollision) {
+        spawnImpact(collision.x, collision.y);
+        flashSprite(enemy);
+        enemy.hp -= 1;
+        if (enemy.hp <= 0) {
+          enemy.alive = false;
+        }
+      }
+    }
+  });
+
   // world boundary
   player.x = clamp(player.x, 0, width);
   player.y = clamp(player.y, 0, height);

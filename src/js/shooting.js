@@ -49,7 +49,9 @@ const shootingClock = new Clock(100, () => {
   }
 });
 
-function shoot() {
+let shoot = shootSingle;
+
+function shootSingle() {
   const bullet = {
     x: player.x,
     y: player.y,
@@ -67,4 +69,29 @@ function shoot() {
   };
   scene.children.push(bullet);
   bullets.push(bullet);
+}
+
+function shootDouble() {
+  const bullet1 = {
+    x: player.x - 10,
+    y: player.y - 2,
+    width: 4,
+    height: 7,
+    alive: true,
+    pixelMap: pixelMaps.bullet,
+    source: img,
+    sx: 30,
+    sy: 0,
+    velocity: {
+      x: 0,
+      y: -5,
+    },
+  };
+  const bullet2 = {
+    ...bullet1,
+    x: player.x + 10,
+    y: player.y - 2,
+  };
+  scene.children.push(bullet1, bullet2);
+  bullets.push(bullet1, bullet2);
 }

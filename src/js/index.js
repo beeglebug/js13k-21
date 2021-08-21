@@ -1,14 +1,3 @@
-const width = 240;
-const height = 400;
-
-let running = true;
-
-const [canvas, ctx] = createCanvas(width, height);
-const [sprites, spritesCtx] = createCanvas(256, 256);
-
-let pixelMaps = {};
-let whiteSprites;
-
 document.getElementById("g").appendChild(canvas);
 
 bindInput(document);
@@ -20,15 +9,6 @@ document.addEventListener("visibilitychange", () => {
 window.addEventListener("contextmenu", (e) => {
   e.preventDefault();
 });
-
-const scale = Math.min(window.innerWidth / width, window.innerHeight / height);
-
-canvas.style.width = width * scale;
-canvas.style.height = height * scale;
-
-let touchTarget = null;
-
-const canvasPos = canvas.getBoundingClientRect();
 
 document.addEventListener("touchstart", (e) => {
   touchTarget = {
@@ -51,9 +31,7 @@ const img = new Image();
 img.onload = init;
 img.src = "sprites.png";
 
-let starsPosition = 0 - height;
-let planetPosition = -200;
-
+// TODO make into display nodes with children
 let bullets = [];
 let enemyBullets = [];
 let enemies = [];
@@ -76,6 +54,7 @@ function init() {
   pixelMaps.enemy = getPixelMap(spritesCtx, 39, 0, 18, 18);
 
   createPlayer();
+  createEnemies();
 
   loop();
 
@@ -99,14 +78,7 @@ function init() {
       speed: 0.8,
     },
   ];
-
-  spawnEnemies();
-  setInterval(() => {
-    spawnEnemies();
-  }, 5000);
 }
-
-const world = { x: width / 2, y: height / 2, width, height };
 
 function loop() {
   requestAnimationFrame(loop);
@@ -125,6 +97,7 @@ function loop() {
   updateBackground();
   updateAnimations(delta);
   updateEnemies(delta);
+  updateLevel(delta);
 
   collision();
 

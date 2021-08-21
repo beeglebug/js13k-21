@@ -27,7 +27,7 @@ function createPlayer() {
 
   player = {
     x: width / 2,
-    y: height - 150,
+    y: height - 100,
     width: 30,
     height: 17,
     alive: true,
