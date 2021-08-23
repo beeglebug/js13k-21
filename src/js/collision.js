@@ -93,9 +93,8 @@ function collision() {
     if (collision) {
       const pixelCollision = collidePixels(bullet, player, collision);
       if (pixelCollision) {
-        flashSprite(player);
-        spawnImpact(collision.x, collision.y);
         bullet.alive = false;
+        damagePlayer(collision);
       }
     }
   });
@@ -113,13 +112,8 @@ function collision() {
       if (collision) {
         const pixelCollision = collidePixels(bullet, enemy, collision);
         if (pixelCollision) {
-          spawnImpact(collision.x, collision.y);
           bullet.alive = false;
-          flashSprite(enemy);
-          enemy.hp -= 1;
-          if (enemy.hp <= 0) {
-            enemy.alive = false;
-          }
+          damageEnemy(enemy, collision);
         }
       }
     });
@@ -131,12 +125,8 @@ function collision() {
     if (collision) {
       const pixelCollision = collidePixels(enemy, player, collision);
       if (pixelCollision) {
-        spawnImpact(collision.x, collision.y);
-        flashSprite(enemy);
-        enemy.hp -= 1;
-        if (enemy.hp <= 0) {
-          enemy.alive = false;
-        }
+        damageEnemy(enemy, collision);
+        damagePlayer(collision);
       }
     }
   });
@@ -151,4 +141,19 @@ function collision() {
   bullets = bullets.filter(isAlive);
 
   scene.children = scene.children.filter(isAlive);
+}
+
+function damageEnemy(enemy, collision) {
+  zzfxP(soundHit);
+  spawnImpact(collision.x, collision.y);
+  flashSprite(enemy);
+  enemy.hp -= 1;
+  if (enemy.hp <= 0) {
+    enemy.alive = false;
+  }
+}
+
+function damagePlayer(collision) {
+  spawnImpact(collision.x, collision.y);
+  flashSprite(player);
 }

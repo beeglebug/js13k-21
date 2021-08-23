@@ -18,6 +18,7 @@ function bindInput(target) {
   target.addEventListener("keydown", ({ code }) => {
     if (code === KEY_SPACE && !downKeys[KEY_SPACE]) {
       shootingClock.count = 0;
+      zzfxP(soundShoot);
       shoot();
     }
     downKeys[code] = true;

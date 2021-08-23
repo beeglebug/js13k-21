@@ -3,9 +3,9 @@ let player;
 function createPlayer() {
   const frame = engineFrames[0];
 
-  const engineTrail1 = {
+  const engineTrailLeft = {
     x: -10,
-    y: 7,
+    y: 8,
     width: frame.width,
     height: frame.height,
     alive: true,
@@ -19,10 +19,9 @@ function createPlayer() {
     loop: true,
   };
 
-  const engineTrail2 = {
-    ...engineTrail1,
+  const engineTrailRight = {
+    ...engineTrailLeft,
     x: 10,
-    y: 7,
   };
 
   player = {
@@ -39,10 +38,10 @@ function createPlayer() {
       x: 0,
       y: 0,
     },
-    children: [engineTrail1, engineTrail2],
+    children: [engineTrailLeft, engineTrailRight],
     pixelMap: pixelMaps.player,
   };
 
   scene.children.unshift(player);
-  animated.push(engineTrail1, engineTrail2);
+  animated.push(engineTrailLeft, engineTrailRight);
 }

@@ -4,11 +4,24 @@ const impactFrames = [
   { x: 63, y: 0, width: 9, height: 9 },
 ];
 
+// TODO define all sprites somewhere once and refer to them by index
 const engineFrames = [
-  { x: 72, y: 0, width: 4, height: 6 },
-  { x: 76, y: 0, width: 4, height: 6 },
-  { x: 80, y: 0, width: 4, height: 6 },
-  { x: 76, y: 0, width: 4, height: 6 },
+  { x: 72, y: 0, width: 4, height: 9 },
+  { x: 76, y: 0, width: 4, height: 9 },
+  { x: 80, y: 0, width: 4, height: 9 },
+  { x: 76, y: 0, width: 4, height: 9 },
+];
+
+const engineFramesBrake = [
+  { x: 72, y: 0, width: 4, height: 9 },
+  { x: 76, y: 0, width: 4, height: 9 },
+];
+
+const engineFramesBoost = [
+  { x: 76, y: 0, width: 4, height: 9 },
+  { x: 80, y: 0, width: 4, height: 9 },
+  { x: 84, y: 0, width: 4, height: 9 },
+  { x: 80, y: 0, width: 4, height: 9 },
 ];
 
 let animated = [];

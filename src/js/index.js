@@ -84,7 +84,34 @@ function loop() {
   requestAnimationFrame(loop);
   let delta = tick();
 
+  if (running === false) return;
+
   handleInput();
+
+  if (player.velocity.x > 0) {
+    player.sy = 17;
+    player.children[0].x = -7;
+    player.children[1].x = 7;
+  } else if (player.velocity.x < 0) {
+    player.sy = 34;
+    player.children[0].x = 7;
+    player.children[1].x = -7;
+  } else {
+    player.sy = 0;
+    player.children[0].x = -10;
+    player.children[1].x = 10;
+  }
+
+  if (player.velocity.y < 0) {
+    player.children[0].frames = engineFramesBoost;
+    player.children[1].frames = engineFramesBoost;
+  } else if (player.velocity.y > 0) {
+    player.children[0].frames = engineFramesBrake;
+    player.children[1].frames = engineFramesBrake;
+  } else {
+    player.children[0].frames = engineFrames;
+    player.children[1].frames = engineFrames;
+  }
 
   scene.children.forEach((item) => {
     if (item.velocity) {
