@@ -1,8 +1,8 @@
 const testPath = [
   { x: width / 2, y: 0 },
   { x: width / 2 - 100, y: 100 },
-  { x: width / 2 + 100, y: 200 },
-  { x: width / 2, y: 300 },
+  { x: width / 2 + 100, y: 300 },
+  { x: width / 2, y: 400 },
 ];
 
 const level1 = {
