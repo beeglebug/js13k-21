@@ -12,10 +12,7 @@ const engineFrames = [
   { x: 76, y: 0, width: 4, height: 9 },
 ];
 
-const engineFramesBrake = [
-  { x: 72, y: 0, width: 4, height: 9 },
-  { x: 76, y: 0, width: 4, height: 9 },
-];
+const engineFramesBrake = [{ x: 72, y: 0, width: 4, height: 9 }];
 
 const engineFramesBoost = [
   { x: 76, y: 0, width: 4, height: 9 },
@@ -40,7 +37,7 @@ function spawnImpact(x, y) {
     frames: impactFrames,
     currentFrame: 0,
     counter: 0,
-    speed: 80,
+    fps: 10,
     loop: false,
   };
 
@@ -51,9 +48,10 @@ function spawnImpact(x, y) {
 function updateAnimations(delta) {
   animated.forEach((entity) => {
     entity.counter += delta * 1000;
-    if (entity.counter >= entity.speed) {
+    const speed = 1000 / entity.fps;
+    if (entity.counter >= speed) {
       // use mod to soak up any super large deltas
-      entity.counter = entity.counter % entity.speed;
+      entity.counter = entity.counter % speed;
       entity.currentFrame++;
 
       if (entity.currentFrame > entity.frames.length - 1) {

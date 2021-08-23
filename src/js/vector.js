@@ -1,4 +1,3 @@
-/** @global */
 function rotate(v, radians) {
   const c = Math.cos(radians);
   const s = Math.sin(radians);
@@ -15,7 +14,6 @@ function perp(v1, v2) {
   return out;
 }
 
-/** @global */
 function zero(v) {
   v.x = 0;
   v.y = 0;
@@ -41,7 +39,6 @@ function copy(v) {
   };
 }
 
-/** @global */
 function normalize(v) {
   // SAVING remove optimizations
   // optimizations to avoid magnitude sqrt
@@ -69,7 +66,6 @@ function distanceTo(v1, v2) {
   return magnitude(sub(v1, v2));
 }
 
-/** @global */
 function add(v1, v2) {
   return {
     x: v1.x + v2.x,
@@ -77,7 +73,6 @@ function add(v1, v2) {
   };
 }
 
-/** @global */
 function sub(v1, v2) {
   return {
     x: v1.x - v2.x,
@@ -85,7 +80,6 @@ function sub(v1, v2) {
   };
 }
 
-/** @global */
 function multiply(v, scalar) {
   v.x *= scalar;
   v.y *= scalar;

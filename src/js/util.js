@@ -1,4 +1,3 @@
-/** @global */
 function createCanvas(width, height) {
   const canvas = document.createElement("canvas");
   const ctx = canvas.getContext("2d");
@@ -8,7 +7,6 @@ function createCanvas(width, height) {
   return [canvas, ctx];
 }
 
-/** @global */
 function tint(image, fill, operation = "source-atop") {
   const [canvas, ctx] = createCanvas(image.width, image.height);
   ctx.drawImage(image, 0, 0);
@@ -18,19 +16,16 @@ function tint(image, fill, operation = "source-atop") {
   return canvas;
 }
 
-/** @global */
 function times(count, fn) {
   for (let i = 0; i < count; i++) {
     fn(i);
   }
 }
 
-/** @global */
 function clamp(value, min, max) {
   return Math.min(Math.max(value, min), max);
 }
 
-/** @global */
 function rgba(r, g, b, a) {
   return `rgba(${r},${g},${b},${a})`;
 }
@@ -38,7 +33,6 @@ function rgba(r, g, b, a) {
 let time = 0;
 let oldTime = 0;
 
-/** @global */
 function tick() {
   // timing for input and FPS counter
   oldTime = time;

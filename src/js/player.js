@@ -5,7 +5,7 @@ function createPlayer() {
 
   const engineTrailLeft = {
     x: -10,
-    y: 8,
+    y: 10,
     width: frame.width,
     height: frame.height,
     alive: true,
@@ -15,7 +15,7 @@ function createPlayer() {
     frames: engineFrames,
     currentFrame: 0,
     counter: 0,
-    speed: 80,
+    fps: 10,
     loop: true,
   };
 

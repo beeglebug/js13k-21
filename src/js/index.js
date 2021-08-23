@@ -56,6 +56,8 @@ function init() {
   createPlayer();
   createEnemies();
 
+  currentLevel = loadLevel(level1);
+
   loop();
 
   // drawPlanet();

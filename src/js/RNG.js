@@ -1,7 +1,7 @@
 // https://stackoverflow.com/questions/424292/seedable-javascript-random-number-generator/424445#424445
 
 // TODO get away with super simple version
-/** @global */
+
 class RNG {
   constructor(seed) {
     this.m = 0x80000000;

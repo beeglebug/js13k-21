@@ -19,3 +19,5 @@ let touchTarget = null;
 const canvasPos = canvas.getBoundingClientRect();
 
 const world = { x: width / 2, y: height / 2, width, height };
+
+let currentLevel;

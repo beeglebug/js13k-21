@@ -1,4 +1,3 @@
-/** @global */
 function render() {
   ctx.fillStyle = "#000000";
   ctx.fillRect(0, 0, width, height);
@@ -8,6 +7,8 @@ function render() {
   // ctx.drawImage(planetCanvas, 0, Math.floor(planetPosition), 512, 512);
 
   traverse(scene, { x: 0, y: 0 });
+
+  renderBezier(testPath);
 
   // debug();
 }
@@ -56,4 +57,23 @@ function debugRect(rect, color) {
     rect.height
   );
   ctx.fillStyle = fillStyle;
+}
+
+function renderBezier(path) {
+  const steps = 100;
+  const accuracy = 1 / steps;
+  const [p0] = path;
+
+  ctx.strokeStyle = "#FF00FF";
+  ctx.lineWidth = 0.5;
+
+  ctx.beginPath();
+  ctx.moveTo(p0.x, p0.y);
+  for (let i = 0; i < 1; i += accuracy) {
+    const v = bezier(path, i);
+    ctx.lineTo(v.x, v.y);
+  }
+
+  ctx.stroke();
+  ctx.closePath();
 }

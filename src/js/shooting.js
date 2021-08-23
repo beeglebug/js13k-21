@@ -73,8 +73,9 @@ function shootSingle() {
 }
 
 function shootDouble() {
+  const gap = 5;
   const bullet1 = {
-    x: player.x - 10,
+    x: player.x - gap,
     y: player.y - 2,
     width: 4,
     height: 7,
@@ -90,7 +91,7 @@ function shootDouble() {
   };
   const bullet2 = {
     ...bullet1,
-    x: player.x + 10,
+    x: player.x + gap,
     y: player.y - 2,
   };
   scene.children.push(bullet1, bullet2);

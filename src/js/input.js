@@ -13,7 +13,6 @@ const KEY_SPACE = "Space";
 
 const downKeys = {};
 
-/** @global */
 function bindInput(target) {
   target.addEventListener("keydown", ({ code }) => {
     if (code === KEY_SPACE && !downKeys[KEY_SPACE]) {
@@ -28,12 +27,10 @@ function bindInput(target) {
   });
 }
 
-/** @global */
 function keyDown(...keys) {
   return keys.some((key) => !!downKeys[key]);
 }
 
-/** @global */
 function handleInput() {
   let velocity;
 

@@ -16,30 +16,14 @@ function createEnemies() {
   enemyTemplates[0] = baseEnemy;
 }
 
-function spawnWave(wave) {
-  const { x, y, type, count, enemyType } = wave;
-
-  let spacing = 40;
-
-  for (let i = 0; i < count; i++) {
-    const base = enemyTemplates[enemyType];
-    const enemy = {
-      ...base,
-      x: x,
-      y: y - i * spacing,
-      velocity: {
-        x: 0,
-        y: base.speed,
-      },
-    };
-
-    scene.children.push(enemy);
-    enemies.push(enemy);
-  }
-}
-
 function updateEnemies(delta) {
   enemies.forEach((enemy) => {
+    if (enemy.path) {
+      // calculate velocity required to get to next point on path
+      const nextPoint = { x: width, y: height };
+      enemy.velocity = sub(nextPoint, enemy);
+      multiply(normalize(enemy.velocity), enemy.speed);
+    }
     if (enemy.clock) {
       enemy.clock.update(delta);
     }
