@@ -1,14 +1,16 @@
-function bezier([p0, p1, p2, p3], t) {
-  var cX = 3 * (p1.x - p0.x),
-    bX = 3 * (p2.x - p1.x) - cX,
-    aX = p3.x - p0.x - cX - bX;
+function bezier(path, t) {
+  const [p0, p1, p2, p3] = path;
 
-  var cY = 3 * (p1.y - p0.y),
-    bY = 3 * (p2.y - p1.y) - cY,
-    aY = p3.y - p0.y - cY - bY;
+  const cx = 3 * (p1.x - p0.x);
+  const bc = 3 * (p2.x - p1.x) - cx;
+  const ax = p3.x - p0.x - cx - bc;
 
-  var x = aX * Math.pow(t, 3) + bX * Math.pow(t, 2) + cX * t + p0.x;
-  var y = aY * Math.pow(t, 3) + bY * Math.pow(t, 2) + cY * t + p0.y;
+  const cy = 3 * (p1.y - p0.y);
+  const by = 3 * (p2.y - p1.y) - cy;
+  const ay = p3.y - p0.y - cy - by;
 
-  return { x: x, y: y };
+  return {
+    x: ax * Math.pow(t, 3) + bc * Math.pow(t, 2) + cx * t + p0.x,
+    y: ay * Math.pow(t, 3) + by * Math.pow(t, 2) + cy * t + p0.y,
+  };
 }

@@ -18,11 +18,18 @@ function createEnemies() {
 
 function updateEnemies(delta) {
   enemies.forEach((enemy) => {
-    if (enemy.path) {
-      // calculate velocity required to get to next point on path
-      const nextPoint = { x: width, y: height };
-      enemy.velocity = sub(nextPoint, enemy);
-      multiply(normalize(enemy.velocity), enemy.speed);
+    const { path, speed } = enemy;
+    if (path) {
+      // straight line
+      if (path.length === 2) {
+        const nextPoint = path[path.length - 1];
+        enemy.velocity = sub(nextPoint, enemy);
+        multiply(normalize(enemy.velocity), speed);
+      }
+      // // calculate velocity required to get to next point on path
+      // const nextPoint = { x: width, y: height };
+      // enemy.velocity = sub(nextPoint, enemy);
+      // multiply(normalize(enemy.velocity), enemy.speed);
     }
     if (enemy.clock) {
       enemy.clock.update(delta);

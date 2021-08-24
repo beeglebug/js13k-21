@@ -5,6 +5,26 @@ const testPath = [
   { x: width / 2, y: 400 },
 ];
 
+const testLinePath1 = [
+  { x: 50, y: -50 },
+  { x: 50, y: height + 50 },
+];
+
+const testLinePath2 = [
+  { x: width - 50, y: -50 },
+  { x: width - 50, y: height + 50 },
+];
+
+const testLinePath3 = [
+  { x: -50, y: -50 },
+  { x: width + 50, y: height + 50 },
+];
+
+const testLinePath4 = [
+  { x: width + 50, y: -50 },
+  { x: -50, y: height + 50 },
+];
+
 const level1 = {
   waves: [
     {
@@ -12,24 +32,34 @@ const level1 = {
       time: 3000,
       count: 3,
       interval: 500,
-      x: 50,
-      y: -50,
+      path: testLinePath1,
     },
     {
       enemyType: 0,
       time: 3000,
       count: 3,
       interval: 500,
-      x: width - 50,
-      y: -50,
+      path: testLinePath2,
     },
     {
       enemyType: 0,
-      time: 8000,
+      time: 6000,
+      count: 3,
+      interval: 500,
+      path: testLinePath3,
+    },
+    {
+      enemyType: 0,
+      time: 6000,
+      count: 3,
+      interval: 500,
+      path: testLinePath4,
+    },
+    {
+      enemyType: 0,
+      time: 9000,
       count: 5,
       interval: 500,
-      x: width / 2,
-      y: -50,
       path: testPath,
     },
   ],
@@ -39,9 +69,9 @@ function loadLevel(level) {
   const events = [];
   for (let i = 0; i < level.waves.length; i++) {
     const wave = level.waves[i];
-    const { x, y, count, enemyType, time, interval, path } = wave;
+    const { count, enemyType, time, interval, path } = wave;
     for (let j = 0; j < count; j++) {
-      events.push([time + j * interval, spawnEnemy, [enemyType, x, y, path]]);
+      events.push([time + j * interval, spawnEnemy, [enemyType, path]]);
     }
   }
   return {
@@ -50,8 +80,9 @@ function loadLevel(level) {
   };
 }
 
-function spawnEnemy(enemyType, x, y, path) {
+function spawnEnemy(enemyType, path) {
   const base = enemyTemplates[enemyType];
+  const { x, y } = path[0];
   const enemy = {
     ...base,
     x,
