@@ -1,17 +1,19 @@
 #### TODO
 
-- spawn enemy
-- waves
-- level definition
+- chain paths
 - destroy enemies which go off screen
-- follow path
 - homing missiles
 - laser beams
 - sprite rotation
-- generic clock for animation / shooting / spawning
+- optimise definitions (array to object map, test carefully, zip may be better)
 
 #### DONE
 
+- generic clock for animation / shooting / spawning
+- follow path
+- level definition
+- waves
+- spawn enemy
 - parallax background
 - sprite animation
 - broadphase collision
