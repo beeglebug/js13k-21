@@ -82,10 +82,21 @@ function init() {
   ];
 }
 
+const tickRate = 1 / 60;
+let adt = 0; // accumulated delta time
+
 function loop() {
   requestAnimationFrame(loop);
   let delta = tick();
+  adt += delta;
+  while (adt >= tickRate) {
+    adt -= tickRate;
+    update(tickRate);
+  }
+  render(adt);
+}
 
+function update(delta) {
   if (running === false) return;
 
   handleInput();
@@ -115,7 +126,7 @@ function loop() {
     player.children[1].frames = engineFrames;
   }
 
-  scene.children.forEach((item) => {
+  [player, ...bullets, ...enemyBullets].forEach((item) => {
     if (item.velocity) {
       item.x += item.velocity.x;
       item.y += item.velocity.y;
@@ -129,6 +140,4 @@ function loop() {
   updateLevel(delta);
 
   collision();
-
-  render();
 }

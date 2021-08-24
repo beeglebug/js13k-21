@@ -62,7 +62,43 @@ function debugRect(rect, color) {
 }
 
 function renderPath(path) {
-  const steps = 20;
+  const [start, ...rest] = path;
+  const end = rest.pop();
+
+  ctx.strokeStyle = "#FF00FF";
+  ctx.lineWidth = 0.5;
+
+  ctx.beginPath();
+  ctx.moveTo(start.x, start.y);
+
+  rest.forEach((v) => {
+    ctx.lineTo(v.x, v.y);
+    ctx.fillStyle = "#FFFFFF";
+    ctx.fillRect(clamp(v.x, 0, width) - 1, clamp(v.y, 0, height) - 1, 2, 2);
+  });
+
+  ctx.lineTo(end.x, end.y);
+
+  ctx.stroke();
+  ctx.closePath();
+
+  ctx.fillStyle = "#FF0000";
+  ctx.fillRect(
+    clamp(start.x, 0, width) - 1,
+    clamp(start.y, 0, height) - 1,
+    2,
+    2
+  );
+  ctx.fillRect(clamp(end.x, 0, width) - 1, clamp(end.y, 0, height) - 1, 2, 2);
+
+  ctx.fillStyle = "#00FF00";
+  rest.forEach((v) => {
+    ctx.fillRect(clamp(v.x, 0, width) - 1, clamp(v.y, 0, height) - 1, 2, 2);
+  });
+}
+
+function renderBezierPath(path) {
+  const steps = 10;
   const accuracy = 1 / steps;
 
   const [start, ...rest] = path;

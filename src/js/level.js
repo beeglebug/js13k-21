@@ -60,7 +60,7 @@ const level1 = {
       time: 9000,
       count: 5,
       interval: 500,
-      path: testPath,
+      path: precomputeBezierPath(testPath, 16),
     },
   ],
 };
@@ -78,24 +78,6 @@ function loadLevel(level) {
     time: 0,
     events,
   };
-}
-
-function spawnEnemy(enemyType, path) {
-  const base = enemyTemplates[enemyType];
-  const { x, y } = path[0];
-  const enemy = {
-    ...base,
-    x,
-    y,
-    path,
-    velocity: {
-      x: 0,
-      y: base.speed,
-    },
-  };
-
-  scene.children.push(enemy);
-  enemies.push(enemy);
 }
 
 function updateLevel(delta) {

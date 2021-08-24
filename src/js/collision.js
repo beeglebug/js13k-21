@@ -129,6 +129,10 @@ function collision() {
         damagePlayer(collision);
       }
     }
+
+    if (enemy.y > height) {
+      enemy.alive = false;
+    }
   });
 
   // world boundary

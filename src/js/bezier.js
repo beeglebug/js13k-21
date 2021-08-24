@@ -14,3 +14,15 @@ function bezier(path, t) {
     y: ay * Math.pow(t, 3) + by * Math.pow(t, 2) + cy * t + p0.y,
   };
 }
+
+function precomputeBezierPath(path, resolution) {
+  const accuracy = 1 / resolution;
+  const points = [];
+
+  for (let i = 0; i <= 1; i += accuracy) {
+    const v = bezier(path, i);
+    points.push(v);
+  }
+
+  return points;
+}
