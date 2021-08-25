@@ -8,9 +8,13 @@ function render() {
 
   traverse(scene, { x: 0, y: 0 });
 
-  enemies.forEach((enemy) => {
-    renderPath(enemy.path);
-  });
+  renderText(whiteFont, `Score: ${score}`, 5, 5);
+  renderText(whiteFont, "Lives:", 140, 5);
+
+  for (let i = 0; i < lives; i++) {
+    const x = 168 + 10 * i;
+    ctx.drawImage(sprites, 89, 1, 8, 5, x, 5, 8, 5);
+  }
 
   // debug();
 }
@@ -42,6 +46,10 @@ function flashSprite(target, delay = 100) {
 }
 
 function debug() {
+  enemies.forEach((enemy) => {
+    renderPath(enemy.path);
+  });
+
   debugRect(player, "rgba(255,0,255,0.8)");
 
   enemyBullets.forEach((bullet) => {

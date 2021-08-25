@@ -42,9 +42,15 @@ const scene = {
   children: [],
 };
 
+let whiteFont;
+
 function init() {
   whiteSprites = tint(img, "#FFFFFF");
   spritesCtx.drawImage(img, 0, 0);
+
+  whiteFontCtx.drawImage(img, 0, 59, 132, 5, 0, 0, 132, 5);
+
+  whiteFont = whiteFontCanvas;
 
   // generate pixel map cache
   // TODO multiple enemies / player animation frames

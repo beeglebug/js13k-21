@@ -30,7 +30,7 @@ function createPlayer() {
     width: 30,
     height: 17,
     alive: true,
-    source: img,
+    source: sprites,
     sx: 0,
     sy: 0,
     speed: 4,
