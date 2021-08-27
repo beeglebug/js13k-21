@@ -43,15 +43,6 @@ function enemyShoot(enemy, count) {
   // rotate(initial, -0.05);
 }
 
-const shootingClock = new Clock(300, () => {
-  if (keyDown(KEY_SPACE) || touchTarget) {
-    zzfxP(soundShoot);
-    shoot();
-  }
-});
-
-let shoot = shootDouble;
-
 function shootSingle() {
   const bullet = {
     x: player.x,

@@ -154,6 +154,7 @@ function damageEnemy(enemy, collision) {
   enemy.hp -= 1;
   if (enemy.hp <= 0) {
     enemy.alive = false;
+    score += 10;
   }
 }
 

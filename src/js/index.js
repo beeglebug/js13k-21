@@ -6,7 +6,7 @@ document.addEventListener("visibilitychange", () => {
   running = document.visibilityState === "visible";
 });
 
-window.addEventListener("contextmenu", (e) => {
+document.addEventListener("contextmenu", (e) => {
   e.preventDefault();
 });
 
@@ -28,7 +28,7 @@ document.addEventListener("touchmove", (e) => {
 });
 
 const img = new Image();
-img.onload = init;
+img.onload = loadComplete;
 img.src = "sprites.png";
 
 // TODO make into display nodes with children
@@ -42,15 +42,23 @@ const scene = {
   children: [],
 };
 
+let logoBlue = "#0078f8";
+
 let whiteFont;
 
-function init() {
+let whiteLogo;
+let blueLogo;
+
+function loadComplete() {
   whiteSprites = tint(img, "#FFFFFF");
   spritesCtx.drawImage(img, 0, 0);
 
   whiteFontCtx.drawImage(img, 0, 59, 132, 5, 0, 0, 132, 5);
 
   whiteFont = whiteFontCanvas;
+
+  whiteLogo = createLogo();
+  blueLogo = tint(whiteLogo, logoBlue);
 
   // generate pixel map cache
   // TODO multiple enemies / player animation frames
@@ -59,33 +67,19 @@ function init() {
   pixelMaps.enemyBullet = getPixelMap(spritesCtx, 32, 8, 5, 5);
   pixelMaps.enemy = getPixelMap(spritesCtx, 39, 0, 18, 18);
 
+  // needs doing after pixel maps
   createPlayer();
   createEnemies();
 
+  // enterLevel
   currentLevel = loadLevel(level1);
+
+  enterMenu();
 
   loop();
 
   // drawPlanet();
   // drawGreebles();
-
-  backgroundLayers = [
-    {
-      y: 0,
-      img: drawStars(2, 30, 0.8),
-      speed: 1.2,
-    },
-    {
-      y: 0,
-      img: drawStars(1, 100, 0.7),
-      speed: 1,
-    },
-    {
-      y: 0,
-      img: drawStars(1, 200, 0.6),
-      speed: 0.8,
-    },
-  ];
 }
 
 const tickRate = 1 / 60;
@@ -141,6 +135,7 @@ function update(delta) {
 
   shootingClock.update(delta);
   updateBackground();
+  updateTweens(delta);
   updateAnimations(delta);
   updateEnemies(delta);
   updateLevel(delta);

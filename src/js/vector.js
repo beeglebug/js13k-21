@@ -40,8 +40,6 @@ function copy(v) {
 }
 
 function normalize(v) {
-  // SAVING remove optimizations
-  // optimizations to avoid magnitude sqrt
   if (isZero(v)) return v;
 
   if (v.x === 0) {

@@ -1,5 +1,3 @@
-let enemyTemplates = {};
-
 function createEnemies() {
   const baseEnemy = {
     width: 10,
@@ -26,11 +24,10 @@ function spawnEnemy(enemyType, path) {
     pathIndex: 0,
     // head to second point
     target: second,
+    velocity: { x: 0, y: 0 },
   };
 
-  // aim at second path point to start
-  // for straight lines this is enough
-  enemy.velocity = sub(enemy, path[1]);
+  seekTarget(enemy);
 
   scene.children.push(enemy);
   enemies.push(enemy);
@@ -40,15 +37,6 @@ const toArray = (v) => [v.x, v.y];
 
 function updateEnemies(delta) {
   enemies.forEach((enemy) => {
-    if (enemy.clock) {
-      enemy.clock.update(delta);
-    }
-
-    if (enemy.target) {
-      enemy.velocity = sub(enemy.target, enemy);
-      multiply(normalize(enemy.velocity), enemy.speed);
-    }
-
     enemy.x += enemy.velocity.x;
     enemy.y += enemy.velocity.y;
 
@@ -57,9 +45,17 @@ function updateEnemies(delta) {
       const threshold = 10;
       if (distanceTo(enemy, enemy.target) < threshold) {
         enemy.target = enemy.path[++enemy.pathIndex];
+        seekTarget(enemy);
       }
     }
   });
+}
+
+function seekTarget(enemy) {
+  enemy.velocity.x = enemy.target.x - enemy.x;
+  enemy.velocity.y = enemy.target.y - enemy.y;
+  normalize(enemy.velocity);
+  multiply(enemy.velocity, enemy.speed);
 }
 
 class Clock {

@@ -1,8 +1,8 @@
 const testPath = [
   { x: width / 2, y: 0 },
   { x: width / 2 - 100, y: 100 },
-  { x: width / 2 + 100, y: 300 },
-  { x: width / 2, y: 400 },
+  { x: width / 2 + 100, y: height - 100 },
+  { x: width / 2, y: height },
 ];
 
 const testLinePath1 = [

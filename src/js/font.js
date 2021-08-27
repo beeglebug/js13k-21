@@ -1,4 +1,5 @@
-function renderText(font, text, x, y, scale = 1) {
+function renderText(ctx, font, text, x, y, scale = 1) {
+  ctx.imageSmoothingEnabled = false;
   text
     .toUpperCase()
     .split("")
@@ -18,6 +19,7 @@ function renderText(font, text, x, y, scale = 1) {
         5 * scale
       );
     });
+  ctx.imageSmoothingEnabled = true;
 }
 
 // font currently handles chars 0-9 A-Z -,.:?

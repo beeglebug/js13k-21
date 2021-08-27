@@ -1,6 +1,3 @@
-const starsRng = new RNG(2047356049);
-// console.log(starsRng.seed);
-
 function drawStars(size, count, opacity) {
   const layerHeight = height * 2;
   const [canvas, ctx] = createCanvas(width, layerHeight);
