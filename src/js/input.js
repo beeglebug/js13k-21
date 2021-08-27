@@ -15,11 +15,34 @@ const downKeys = {};
 
 function bindInput(target) {
   target.addEventListener("keydown", ({ code }) => {
-    if (code === KEY_SPACE && !downKeys[KEY_SPACE]) {
-      shootingClock.count = 0;
-      zzfxP(soundShoot);
-      shoot();
+    if (state === STATE_GAME) {
+      // TODO move to cooldown based shooting
+      if (code === KEY_SPACE && !downKeys[KEY_SPACE]) {
+        shootingClock.count = 0;
+        zzfxP(soundShoot);
+        shoot();
+      }
     }
+
+    if (state === STATE_MAIN_MENU) {
+      if (code === KEY_SPACE) {
+        menu.items[menu.selected].fn();
+      }
+
+      if ([KEY_W, KEY_Z, KEY_UP].includes(code)) {
+        menu.selected--;
+        if (menu.selected < 0) {
+          menu.selected = menu.items.length - 1;
+        }
+      }
+      if ([KEY_S, KEY_DOWN].includes(code)) {
+        menu.selected++;
+        if (menu.selected >= menu.items.length) {
+          menu.selected = 0;
+        }
+      }
+    }
+
     downKeys[code] = true;
   });
   target.addEventListener("keyup", ({ code }) => {
@@ -33,6 +56,10 @@ function keyDown(...keys) {
 
 function handleInput() {
   let velocity;
+
+  if (state === STATE_MAIN_MENU) {
+    return;
+  }
 
   if (touchTarget) {
     velocity = sub(touchTarget, player);

@@ -52,6 +52,7 @@ function updateEnemies(delta) {
 }
 
 function seekTarget(enemy) {
+  if (!enemy.target) return;
   enemy.velocity.x = enemy.target.x - enemy.x;
   enemy.velocity.y = enemy.target.y - enemy.y;
   normalize(enemy.velocity);
@@ -59,16 +60,16 @@ function seekTarget(enemy) {
 }
 
 class Clock {
-  constructor(frequency, callback) {
+  constructor(frequency, fn) {
     this.count = 0;
     this.frequency = frequency;
-    this.callback = callback;
+    this.fn = fn;
   }
   update(delta) {
     this.count += delta * 1000;
     if (this.count >= this.frequency) {
       this.count = this.count % this.frequency;
-      this.callback();
+      this.fn();
     }
   }
 }

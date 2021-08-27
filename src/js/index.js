@@ -42,12 +42,10 @@ const scene = {
   children: [],
 };
 
-let logoBlue = "#0078f8";
-
 let whiteFont;
 
-let whiteLogo;
-let blueLogo;
+let logoForeground;
+let logoBackground;
 
 function loadComplete() {
   whiteSprites = tint(img, "#FFFFFF");
@@ -57,8 +55,8 @@ function loadComplete() {
 
   whiteFont = whiteFontCanvas;
 
-  whiteLogo = createLogo();
-  blueLogo = tint(whiteLogo, logoBlue);
+  logoBackground = createLogo();
+  logoForeground = tint(logoBackground, "#0078f8");
 
   // generate pixel map cache
   // TODO multiple enemies / player animation frames
@@ -101,44 +99,44 @@ function update(delta) {
 
   handleInput();
 
-  if (player.velocity.x > 0) {
-    player.sy = 17;
-    player.children[0].x = -7;
-    player.children[1].x = 7;
-  } else if (player.velocity.x < 0) {
-    player.sy = 34;
-    player.children[0].x = 7;
-    player.children[1].x = -7;
-  } else {
-    player.sy = 0;
-    player.children[0].x = -10;
-    player.children[1].x = 10;
-  }
-
-  if (player.velocity.y < 0) {
-    player.children[0].frames = engineFramesBoost;
-    player.children[1].frames = engineFramesBoost;
-  } else if (player.velocity.y > 0) {
-    player.children[0].frames = engineFramesBrake;
-    player.children[1].frames = engineFramesBrake;
-  } else {
-    player.children[0].frames = engineFrames;
-    player.children[1].frames = engineFrames;
-  }
-
-  [player, ...bullets, ...enemyBullets].forEach((item) => {
-    if (item.velocity) {
-      item.x += item.velocity.x;
-      item.y += item.velocity.y;
+  if (state === STATE_GAME) {
+    if (player.velocity.x > 0) {
+      player.sy = 17;
+      player.children[0].x = -7;
+      player.children[1].x = 7;
+    } else if (player.velocity.x < 0) {
+      player.sy = 34;
+      player.children[0].x = 7;
+      player.children[1].x = -7;
+    } else {
+      player.sy = 0;
+      player.children[0].x = -10;
+      player.children[1].x = 10;
     }
-  });
 
-  shootingClock.update(delta);
+    if (player.velocity.y < 0) {
+      player.children[0].frames = engineFramesBoost;
+      player.children[1].frames = engineFramesBoost;
+    } else if (player.velocity.y > 0) {
+      player.children[0].frames = engineFramesBrake;
+      player.children[1].frames = engineFramesBrake;
+    } else {
+      player.children[0].frames = engineFrames;
+      player.children[1].frames = engineFrames;
+    }
+
+    [player, ...bullets, ...enemyBullets].forEach((item) => {
+      if (item.velocity) {
+        item.x += item.velocity.x;
+        item.y += item.velocity.y;
+      }
+    });
+    shootingClock.update(delta);
+    updateEnemies(delta);
+    updateLevel(delta);
+    collision();
+  }
   updateBackground();
   updateTweens(delta);
   updateAnimations(delta);
-  updateEnemies(delta);
-  updateLevel(delta);
-
-  collision();
 }
