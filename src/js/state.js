@@ -5,6 +5,7 @@ const STATE_SETTINGS = 2;
 let state = STATE_MAIN_MENU;
 
 let menu = {
+  y: 200,
   logoY: -100,
   selected: 0,
   items: [
@@ -26,6 +27,7 @@ let menu = {
 
 function enterMenu() {
   menu.logoY = -100;
+  menu.touchAreas = getTouchAreas(menu);
   player.y = height + 100;
   createTween(menu, "logoY", 80, 1000);
   createTween(player, "y", 320, 1000);

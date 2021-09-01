@@ -12,13 +12,13 @@ const engineFrames = [
   { x: 76, y: 0, width: 4, height: 9 },
 ];
 
-const engineFramesBrake = [{ x: 72, y: 0, width: 4, height: 9 }];
+const engineFramesBrake = [{ x: 72, y: 0, width: 4, height: 9 }, null];
 
 const engineFramesBoost = [
-  { x: 76, y: 0, width: 4, height: 9 },
-  { x: 80, y: 0, width: 4, height: 9 },
-  { x: 84, y: 0, width: 4, height: 9 },
-  { x: 80, y: 0, width: 4, height: 9 },
+  { x: 76, y: 0, width: 4, height: 11 },
+  { x: 80, y: 0, width: 4, height: 11 },
+  { x: 84, y: 0, width: 4, height: 11 },
+  { x: 80, y: 0, width: 4, height: 11 },
 ];
 
 let animated = [];

@@ -10,6 +10,7 @@ const KEY_UP = "ArrowUp";
 const KEY_RIGHT = "ArrowRight";
 const KEY_DOWN = "ArrowDown";
 const KEY_SPACE = "Space";
+const KEY_ENTER = "Enter";
 
 const downKeys = {};
 
@@ -25,7 +26,7 @@ function bindInput(target) {
     }
 
     if (state === STATE_MAIN_MENU) {
-      if (code === KEY_SPACE) {
+      if ([KEY_SPACE, KEY_ENTER].includes(code)) {
         menu.items[menu.selected].fn();
       }
 

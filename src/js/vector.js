@@ -39,6 +39,12 @@ function copy(v) {
   };
 }
 
+function set(v, x, y) {
+  v.x = x;
+  v.y = y;
+  return v;
+}
+
 function normalize(v) {
   if (isZero(v)) return v;
 

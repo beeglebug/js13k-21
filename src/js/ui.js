@@ -9,20 +9,21 @@ function renderUI() {
     renderText(ctx, whiteFont, "Lives:", 140, 5);
     for (let i = 0; i < lives; i++) {
       const x = 168 + 10 * i;
-      ctx.drawImage(sprites, 89, 1, 8, 5, x, 5, 8, 5);
+      ctx.drawImage(sprites, 24, 16, 8, 5, x, 5, 8, 5);
     }
   }
 }
 
 function renderMenu() {
-  let y = 200;
+  let y = menu.y;
   menu.items.forEach((item, i) => {
     let text = item.text;
     if (menu.selected === i) {
       text = "- " + text + " -";
     }
     const scale = 2;
-    const x = getCenteredTextPosition(text, scale);
+    const metrics = getTextMetrics(text, scale);
+    const x = width / 2 - metrics.width / 2;
     renderText(ctx, whiteFont, text, x, y + i * 30, scale);
   });
 }
@@ -32,15 +33,18 @@ function renderLogo() {
   ctx.drawImage(logoForeground, 3, menu.logoY);
 }
 
-function getCenteredTextPosition(text, scale = 1) {
-  const textWidth = text.length * 4 * scale;
-  return width / 2 - textWidth / 2;
+function getTextMetrics(text, scale = 1) {
+  return {
+    width: text.length * 4 * scale,
+    height: 5 * scale,
+  };
 }
 
 function createLogo() {
   const text = "iiiviou";
   const scale = 5;
-  const x = getCenteredTextPosition(text, scale);
+  const metrics = getTextMetrics(text, scale);
+  const x = width / 2 - metrics.width / 2;
 
   logoCtx.fillStyle = "#FFFFFF";
   logoCtx.fillRect(20, 0, 194, 4);

@@ -20,7 +20,7 @@ canvas.style.height = height * scale;
 
 let touchTarget = null;
 
-const canvasPos = canvas.getBoundingClientRect();
+let canvasPos;
 
 const world = { x: width / 2, y: height / 2, width, height };
 

@@ -9,7 +9,7 @@ function enemyShootSingle(enemy) {
     alive: true,
     pixelMap: pixelMaps.enemyBullet,
     source: sprites,
-    sx: 30,
+    sx: 24,
     sy: 8,
     velocity: multiply(velocity, 1.5),
   };
@@ -33,7 +33,7 @@ function enemyShoot(enemy, count) {
       alive: true,
       pixelMap: pixelMaps.enemyBullet,
       source: sprites,
-      sx: 30,
+      sx: 24,
       sy: 8,
       velocity: multiply(velocity, 1.5),
     };
@@ -52,7 +52,7 @@ function shootSingle() {
     alive: true,
     pixelMap: pixelMaps.bullet,
     source: sprites,
-    sx: 30,
+    sx: 24,
     sy: 0,
     velocity: {
       x: 0,
@@ -64,7 +64,7 @@ function shootSingle() {
 }
 
 function shootDouble() {
-  const gap = 5;
+  const gap = 3;
   const bullet1 = {
     x: player.x - gap,
     y: player.y - 2,
@@ -73,7 +73,7 @@ function shootDouble() {
     alive: true,
     pixelMap: pixelMaps.bullet,
     source: sprites,
-    sx: 30,
+    sx: 24,
     sy: 0,
     velocity: {
       x: 0,

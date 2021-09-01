@@ -8,9 +8,11 @@ function render() {
 
   traverse(scene, { x: 0, y: 0 });
 
+  ctx.drawImage(bossCanvas, 100, 10);
+
   renderUI();
 
-  // debug();
+  //debug();
 }
 
 function traverse(entity, transform) {
@@ -39,16 +41,39 @@ function flashSprite(target, delay = 100) {
   setTimeout(() => (target.source = original), delay);
 }
 
+function getTouchAreas(menu) {
+  return menu.items.map((item, i) => {
+    // pad out just in case selected
+    let text = "- " + item.text + " -";
+    const scale = 2;
+    const metrics = getTextMetrics(text, scale);
+    const x = width / 2;
+
+    return {
+      x,
+      y: menu.y + i * 30 + metrics.height / 2,
+      width: metrics.width + 20,
+      height: metrics.height + 20,
+    };
+  });
+}
+
 function debug() {
-  enemies.forEach((enemy) => {
-    renderPath(enemy.path);
-  });
+  if (state === STATE_MAIN_MENU) {
+    menu.touchAreas.forEach((item) => debugRect(item, "rgba(255,255,255,0.2)"));
+  }
 
-  debugRect(player, "rgba(255,0,255,0.8)");
+  if (state === STATE_GAME) {
+    enemies.forEach((enemy) => {
+      renderPath(enemy.path);
+    });
 
-  enemyBullets.forEach((bullet) => {
-    debugRect(bullet, "rgba(0,255,255,0.8)");
-  });
+    debugRect(player, "rgba(255,0,255,0.8)");
+
+    enemyBullets.forEach((bullet) => {
+      debugRect(bullet, "rgba(0,255,255,0.8)");
+    });
+  }
 }
 
 function debugRect(rect, color) {
@@ -78,48 +103,6 @@ function renderPath(path) {
     ctx.fillStyle = "#FFFFFF";
     ctx.fillRect(clamp(v.x, 0, width) - 1, clamp(v.y, 0, height) - 1, 2, 2);
   });
-
-  ctx.lineTo(end.x, end.y);
-
-  ctx.stroke();
-  ctx.closePath();
-
-  ctx.fillStyle = "#FF0000";
-  ctx.fillRect(
-    clamp(start.x, 0, width) - 1,
-    clamp(start.y, 0, height) - 1,
-    2,
-    2
-  );
-  ctx.fillRect(clamp(end.x, 0, width) - 1, clamp(end.y, 0, height) - 1, 2, 2);
-
-  ctx.fillStyle = "#00FF00";
-  rest.forEach((v) => {
-    ctx.fillRect(clamp(v.x, 0, width) - 1, clamp(v.y, 0, height) - 1, 2, 2);
-  });
-}
-
-function renderBezierPath(path) {
-  const steps = 10;
-  const accuracy = 1 / steps;
-
-  const [start, ...rest] = path;
-  const end = rest.pop();
-
-  ctx.strokeStyle = "#FF00FF";
-  ctx.lineWidth = 0.5;
-
-  ctx.beginPath();
-  ctx.moveTo(start.x, start.y);
-
-  if (rest.length) {
-    for (let i = 0; i <= 1; i += accuracy) {
-      const v = bezier(path, i);
-      ctx.lineTo(v.x, v.y);
-      ctx.fillStyle = "#FFFFFF";
-      ctx.fillRect(clamp(v.x, 0, width) - 1, clamp(v.y, 0, height) - 1, 2, 2);
-    }
-  }
 
   ctx.lineTo(end.x, end.y);
 

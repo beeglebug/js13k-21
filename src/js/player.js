@@ -4,7 +4,7 @@ function createPlayer() {
   const frame = engineFrames[0];
 
   const engineTrailLeft = {
-    x: -10,
+    x: -9,
     y: 10,
     width: frame.width,
     height: frame.height,
@@ -21,19 +21,19 @@ function createPlayer() {
 
   const engineTrailRight = {
     ...engineTrailLeft,
-    x: 10,
+    x: 9,
   };
 
   player = {
     x: width / 2,
     y: height - 100,
-    width: 30,
-    height: 17,
+    width: 24,
+    height: 16,
     alive: true,
     source: sprites,
     sx: 0,
     sy: 0,
-    speed: 4,
+    speed: 2,
     velocity: {
       x: 0,
       y: 0,

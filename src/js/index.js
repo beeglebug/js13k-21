@@ -18,8 +18,23 @@ document.addEventListener("touchstart", (e) => {
 });
 
 document.addEventListener("touchend", () => {
+  if (state === STATE_MAIN_MENU) {
+    tap(touchTarget);
+  }
   touchTarget = null;
 });
+
+document.addEventListener("mouseup", (e) => {
+  const target = {
+    x: (e.clientX - canvasPos.x) / scale,
+    y: (e.clientY - canvasPos.y) / scale,
+  };
+  tap(target);
+});
+
+function tap(pos) {
+  console.log(pos, menu.items);
+}
 
 document.addEventListener("touchmove", (e) => {
   const x = (e.changedTouches[0].clientX - canvasPos.x) / scale;
@@ -56,7 +71,7 @@ function loadComplete() {
   whiteFont = whiteFontCanvas;
 
   logoBackground = createLogo();
-  logoForeground = tint(logoBackground, "#0078f8");
+  logoForeground = tint(logoBackground, "#5b6ee1");
 
   // generate pixel map cache
   // TODO multiple enemies / player animation frames
@@ -65,9 +80,12 @@ function loadComplete() {
   pixelMaps.enemyBullet = getPixelMap(spritesCtx, 32, 8, 5, 5);
   pixelMaps.enemy = getPixelMap(spritesCtx, 39, 0, 18, 18);
 
+  canvasPos = canvas.getBoundingClientRect();
+
   // needs doing after pixel maps
   createPlayer();
   createEnemies();
+  createBoss();
 
   // enterLevel
   currentLevel = loadLevel(level1);
@@ -91,7 +109,8 @@ function loop() {
     adt -= tickRate;
     update(tickRate);
   }
-  render(adt);
+
+  render();
 }
 
 function update(delta) {
@@ -100,29 +119,30 @@ function update(delta) {
   handleInput();
 
   if (state === STATE_GAME) {
+    // reset animations etc
+    player.children[0].frames = engineFrames;
+    player.children[1].frames = engineFrames;
+    player.sy = 0;
+    set(player.children[0], -9, 10);
+    set(player.children[1], 9, 10);
+
     if (player.velocity.x > 0) {
-      player.sy = 17;
-      player.children[0].x = -7;
-      player.children[1].x = 7;
-    } else if (player.velocity.x < 0) {
-      player.sy = 34;
-      player.children[0].x = 7;
-      player.children[1].x = -7;
-    } else {
-      player.sy = 0;
-      player.children[0].x = -10;
-      player.children[1].x = 10;
+      player.sy = 16;
+      set(player.children[0], -7, 9);
+      set(player.children[1], 7, 12);
+      player.children[0].frames = engineFramesBoost;
+    }
+
+    if (player.velocity.x < 0) {
+      player.sy = 32;
+      set(player.children[0], -7, 12);
+      set(player.children[1], 7, 9);
+      player.children[1].frames = engineFramesBoost;
     }
 
     if (player.velocity.y < 0) {
       player.children[0].frames = engineFramesBoost;
       player.children[1].frames = engineFramesBoost;
-    } else if (player.velocity.y > 0) {
-      player.children[0].frames = engineFramesBrake;
-      player.children[1].frames = engineFramesBrake;
-    } else {
-      player.children[0].frames = engineFrames;
-      player.children[1].frames = engineFrames;
     }
 
     [player, ...bullets, ...enemyBullets].forEach((item) => {
