@@ -16,15 +16,6 @@ const downKeys = {};
 
 function bindInput(target) {
   target.addEventListener("keydown", ({ code }) => {
-    if (state === STATE_GAME) {
-      // TODO move to cooldown based shooting
-      if (code === KEY_SPACE && !downKeys[KEY_SPACE]) {
-        shootingClock.count = 0;
-        zzfxP(soundShoot);
-        shoot();
-      }
-    }
-
     if (state === STATE_MAIN_MENU) {
       if ([KEY_SPACE, KEY_ENTER].includes(code)) {
         menu.items[menu.selected].fn();
@@ -56,16 +47,12 @@ function keyDown(...keys) {
 }
 
 function handleInput() {
-  let velocity;
+  let velocity = zero(player.velocity);
 
-  if (state === STATE_MAIN_MENU) {
-    return;
-  }
+  if (state !== STATE_GAME || player.hasControl === false) return;
 
-  if (touchTarget) {
-    velocity = sub(touchTarget, player);
-  } else {
-    velocity = zero(player.velocity);
+  if (keyDown(KEY_SPACE)) {
+    shoot();
   }
 
   if (keyDown(KEY_W, KEY_Z, KEY_UP)) {

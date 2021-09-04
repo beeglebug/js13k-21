@@ -10,36 +10,16 @@ document.addEventListener("contextmenu", (e) => {
   e.preventDefault();
 });
 
-document.addEventListener("touchstart", (e) => {
-  touchTarget = {
-    x: (e.touches[0].clientX - canvasPos.x) / scale,
-    y: (e.touches[0].clientY - canvasPos.y) / scale,
-  };
-});
-
-document.addEventListener("touchend", () => {
-  if (state === STATE_MAIN_MENU) {
-    tap(touchTarget);
-  }
-  touchTarget = null;
-});
-
-document.addEventListener("mouseup", (e) => {
+document.addEventListener("click", (e) => {
+  if (state !== STATE_MAIN_MENU) return;
   const target = {
     x: (e.clientX - canvasPos.x) / scale,
     y: (e.clientY - canvasPos.y) / scale,
   };
-  tap(target);
-});
-
-function tap(pos) {
-  console.log(pos, menu.items);
-}
-
-document.addEventListener("touchmove", (e) => {
-  const x = (e.changedTouches[0].clientX - canvasPos.x) / scale;
-  const y = (e.changedTouches[0].clientY - canvasPos.y) / scale;
-  touchTarget = { x, y };
+  const selected = menu.items.find((item) => pointInRect(target, item.rect));
+  if (selected) {
+    selected.fn();
+  }
 });
 
 const img = new Image();
@@ -76,9 +56,9 @@ function loadComplete() {
   // generate pixel map cache
   // TODO multiple enemies / player animation frames
   pixelMaps.player = getPixelMap(spritesCtx, 0, 0, 32, 32);
-  pixelMaps.bullet = getPixelMap(spritesCtx, 32, 0, 4, 7);
+  pixelMaps.bullet = getPixelMap(spritesCtx, 32, 0, 9, 6);
   pixelMaps.enemyBullet = getPixelMap(spritesCtx, 32, 8, 5, 5);
-  pixelMaps.enemy = getPixelMap(spritesCtx, 39, 0, 18, 18);
+  pixelMaps.enemy = getPixelMap(spritesCtx, 32, 32, 18, 18);
 
   canvasPos = canvas.getBoundingClientRect();
 
@@ -98,20 +78,14 @@ function loadComplete() {
   // drawGreebles();
 }
 
-const tickRate = 1 / 60;
-let adt = 0; // accumulated delta time
-
 function loop() {
   requestAnimationFrame(loop);
   let delta = tick();
-  adt += delta;
-  while (adt >= tickRate) {
-    adt -= tickRate;
-    update(tickRate);
-  }
-
+  update(delta);
   render();
 }
+
+let shootingCooldown = 0;
 
 function update(delta) {
   if (running === false) return;
@@ -144,18 +118,24 @@ function update(delta) {
       player.children[0].frames = engineFramesBoost;
       player.children[1].frames = engineFramesBoost;
     }
+  }
 
+  if (state === STATE_GAME || state === STATE_GAME_OVER) {
     [player, ...bullets, ...enemyBullets].forEach((item) => {
       if (item.velocity) {
         item.x += item.velocity.x;
         item.y += item.velocity.y;
       }
     });
-    shootingClock.update(delta);
+
+    shootingCooldown -= delta * 1000;
+    if (shootingCooldown < 0) shootingCooldown = 0;
+
     updateEnemies(delta);
     updateLevel(delta);
     collision();
   }
+
   updateBackground();
   updateTweens(delta);
   updateAnimations(delta);

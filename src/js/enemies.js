@@ -6,8 +6,8 @@ function createEnemies() {
     hp: 1,
     source: sprites,
     pixelMap: pixelMaps.enemy,
-    sx: 35,
-    sy: 0,
+    sx: 32,
+    sy: 32,
     speed: 1.5,
   };
 
@@ -57,19 +57,4 @@ function seekTarget(enemy) {
   enemy.velocity.y = enemy.target.y - enemy.y;
   normalize(enemy.velocity);
   multiply(enemy.velocity, enemy.speed);
-}
-
-class Clock {
-  constructor(frequency, fn) {
-    this.count = 0;
-    this.frequency = frequency;
-    this.fn = fn;
-  }
-  update(delta) {
-    this.count += delta * 1000;
-    if (this.count >= this.frequency) {
-      this.count = this.count % this.frequency;
-      this.fn();
-    }
-  }
 }

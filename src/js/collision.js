@@ -79,6 +79,14 @@ function collideRectRect(r1, r2) {
   };
 }
 
+function pointInRect(point, rect) {
+  const left = rect.x - rect.width / 2;
+  const top = rect.y - rect.height / 2;
+  const right = rect.x + rect.width / 2;
+  const bottom = rect.y + rect.height / 2;
+  return point.x > left && point.x < right && point.y > top && point.y < bottom;
+}
+
 function collision() {
   // collision
   enemyBullets.forEach((bullet) => {
@@ -88,13 +96,15 @@ function collision() {
       return;
     }
 
-    // enemy bullets vs player
-    const collision = collideRectRect(bullet, player);
-    if (collision) {
-      const pixelCollision = collidePixels(bullet, player, collision);
-      if (pixelCollision) {
-        bullet.alive = false;
-        damagePlayer(collision);
+    if (player.invulnerable === false) {
+      // enemy bullets vs player
+      const collision = collideRectRect(bullet, player);
+      if (collision) {
+        const pixelCollision = collidePixels(bullet, player, collision);
+        if (pixelCollision) {
+          bullet.alive = false;
+          damagePlayer(collision);
+        }
       }
     }
   });
@@ -135,9 +145,12 @@ function collision() {
     }
   });
 
-  // world boundary
-  player.x = clamp(player.x, 0, width);
-  player.y = clamp(player.y, 0, height);
+  // dont clip if being animated (for spawn)
+  if (player.hasControl === true) {
+    // world boundary
+    player.x = clamp(player.x, 0, width);
+    player.y = clamp(player.y, 0, height);
+  }
 
   // get rid of dead stuff at end
   enemies = enemies.filter(isAlive);
@@ -159,6 +172,44 @@ function damageEnemy(enemy, collision) {
 }
 
 function damagePlayer(collision) {
+  if (player.invulnerable) return;
   spawnImpact(collision.x, collision.y);
-  flashSprite(player);
+  lives -= 1;
+  if (lives === 0) {
+    gameOver();
+  } else {
+    respawn();
+  }
+}
+
+function gameOver() {
+  state = STATE_GAME_OVER;
+  player.hasControl = false;
+  // go away
+  player.y = 9999;
+}
+
+function respawn() {
+  player.hasControl = false;
+  player.invulnerable = true;
+
+  // move off screen
+  player.x = width / 2;
+  player.y = height + 50;
+
+  // wait a sec
+  setTimeout(() => {
+    let int = setInterval(() => {
+      flashSprite(player);
+    }, 200);
+
+    setTimeout(() => {
+      clearInterval(int);
+      player.invulnerable = false;
+    }, 1500);
+
+    createTween(player, "y", 320, 1000, () => {
+      player.hasControl = true;
+    });
+  }, 1000);
 }

@@ -18,8 +18,6 @@ const [logoCanvas, logoCtx] = createCanvas(width, 50);
 canvas.style.width = width * scale;
 canvas.style.height = height * scale;
 
-let touchTarget = null;
-
 let canvasPos;
 
 const world = { x: width / 2, y: height / 2, width, height };
@@ -28,16 +26,7 @@ let currentLevel;
 let score = 0;
 let lives = 3;
 
-let shoot = shootDouble;
-
 let enemyTemplates = {};
-
-const shootingClock = new Clock(300, () => {
-  if (keyDown(KEY_SPACE) || touchTarget) {
-    zzfxP(soundShoot);
-    shoot();
-  }
-});
 
 const starsRng = new RNG(2047356049);
 // console.log(starsRng.seed);

@@ -1,14 +1,21 @@
 #### TODO
 
+- game over text, pause, back to menu
+- track high score (show on menu)
+- bigger exposion effect for deaths
 - chain paths
-- destroy enemies which go off screen
-- homing missiles
-- laser beams
-- sprite rotation
-- optimise definitions (array to object map, test carefully, zip may be better)
+- spawn power ups
+  - speed boost
+  - weapon boost (speed)
+  - shield (absorbs a hit or two)
+  - bonus points
+  - spawn when entire wave is destroyed
+- boss enemy
+- weapon swapping (side fire, back fire)
 
 #### DONE
 
+- destroy enemies which go off screen
 - generic clock for animation / shooting / spawning
 - follow path
 - level definition

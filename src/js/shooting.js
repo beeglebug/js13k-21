@@ -43,12 +43,12 @@ function enemyShoot(enemy, count) {
   // rotate(initial, -0.05);
 }
 
-function shootSingle() {
+function shootForward() {
   const bullet = {
     x: player.x,
     y: player.y,
-    width: 4,
-    height: 7,
+    width: 9,
+    height: 6,
     alive: true,
     pixelMap: pixelMaps.bullet,
     source: sprites,
@@ -63,28 +63,9 @@ function shootSingle() {
   bullets.push(bullet);
 }
 
-function shootDouble() {
-  const gap = 3;
-  const bullet1 = {
-    x: player.x - gap,
-    y: player.y - 2,
-    width: 4,
-    height: 7,
-    alive: true,
-    pixelMap: pixelMaps.bullet,
-    source: sprites,
-    sx: 24,
-    sy: 0,
-    velocity: {
-      x: 0,
-      y: -5,
-    },
-  };
-  const bullet2 = {
-    ...bullet1,
-    x: player.x + gap,
-    y: player.y - 2,
-  };
-  scene.children.push(bullet1, bullet2);
-  bullets.push(bullet1, bullet2);
-}
+let shoot = () => {
+  if (shootingCooldown > 0) return;
+  shootingCooldown += player.weaponSpeed;
+  zzfxP(soundShoot);
+  shootForward();
+};

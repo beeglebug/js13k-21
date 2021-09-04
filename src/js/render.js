@@ -8,7 +8,7 @@ function render() {
 
   traverse(scene, { x: 0, y: 0 });
 
-  ctx.drawImage(bossCanvas, 100, 10);
+  // ctx.drawImage(bossCanvas, 100, 10);
 
   renderUI();
 
@@ -16,6 +16,7 @@ function render() {
 }
 
 function traverse(entity, transform) {
+  if (entity.visible === false) return;
   renderEntity(entity, transform);
 
   if (entity.children === undefined) return;
@@ -27,7 +28,7 @@ function traverse(entity, transform) {
 }
 
 function renderEntity(entity, transform) {
-  const { x, y, sx, sy, source, width, height } = entity;
+  const { x, y, sx, sy, source, width, height, visible } = entity;
   if (source === undefined) return; // non renderable
   const worldX = Math.floor(transform.x + x - width / 2);
   const worldY = Math.floor(transform.y + y - height / 2);
@@ -42,14 +43,14 @@ function flashSprite(target, delay = 100) {
 }
 
 function getTouchAreas(menu) {
-  return menu.items.map((item, i) => {
+  menu.items.forEach((item, i) => {
     // pad out just in case selected
     let text = "- " + item.text + " -";
     const scale = 2;
     const metrics = getTextMetrics(text, scale);
     const x = width / 2;
 
-    return {
+    item.rect = {
       x,
       y: menu.y + i * 30 + metrics.height / 2,
       width: metrics.width + 20,

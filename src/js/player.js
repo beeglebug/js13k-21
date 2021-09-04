@@ -34,12 +34,16 @@ function createPlayer() {
     sx: 0,
     sy: 0,
     speed: 2,
+    weaponSpeed: 200,
     velocity: {
       x: 0,
       y: 0,
     },
     children: [engineTrailLeft, engineTrailRight],
     pixelMap: pixelMaps.player,
+    hasControl: false,
+    invulnerable: false,
+    visible: true,
   };
 
   scene.children.unshift(player);

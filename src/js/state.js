@@ -1,6 +1,7 @@
 const STATE_MAIN_MENU = 0;
 const STATE_GAME = 1;
 const STATE_SETTINGS = 2;
+const STATE_GAME_OVER = 3;
 
 let state = STATE_MAIN_MENU;
 
@@ -13,13 +14,9 @@ let menu = {
       text: "new game",
       fn: () => {
         state = STATE_GAME;
+        enterGame();
+        // TODO setState(STATE_GAME)
         // TODO reset level etc
-      },
-    },
-    {
-      text: "settings",
-      fn: () => {
-        state = STATE_SETTINGS;
       },
     },
   ],
@@ -27,13 +24,16 @@ let menu = {
 
 function enterMenu() {
   menu.logoY = -100;
-  menu.touchAreas = getTouchAreas(menu);
-  player.y = height + 100;
+  getTouchAreas(menu);
+  player.y = height + 50;
   createTween(menu, "logoY", 80, 1000);
   createTween(player, "y", 320, 1000);
 }
 
 function enterGame() {
-  player.y = height + 100;
-  createTween(player, "y", 300, 1000);
+  setTimeout(() => {
+    player.hasControl = true;
+  }, 500);
 }
+
+function enterGameOver() {}
