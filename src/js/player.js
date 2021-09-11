@@ -31,6 +31,7 @@ function createPlayer() {
     height: 16,
     alive: true,
     source: sprites,
+    flashSprite: whiteSprites,
     sx: 0,
     sy: 0,
     speed: 2,

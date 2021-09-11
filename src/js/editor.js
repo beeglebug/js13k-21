@@ -23,6 +23,9 @@ const getMouseTile = (e) => {
 
 let mouseTile = { x: 0, y: 0 };
 
+let lastChangedCoords = null;
+let lastChangedFrom = null;
+
 canvas.addEventListener("mousemove", (e) => {
   mouseTile = getMouseTile(e);
 });
@@ -33,10 +36,22 @@ canvas.addEventListener("click", (e) => {
     selected = x + y * spriteWidth;
   } else {
     y -= 5;
+    lastChangedCoords = { x, y };
+    lastChangedFrom = design[y][x];
     design[y][x] = selected;
   }
-  window.localStorage.setItem("design", JSON.stringify(design));
 });
+
+document.addEventListener("keydown", function (event) {
+  if (event.metaKey && event.key === "z") {
+    undo();
+  }
+});
+
+function undo() {
+  let { x, y } = lastChangedCoords;
+  design[y][x] = lastChangedFrom;
+}
 
 function loadComplete() {
   loop();
@@ -108,14 +123,6 @@ function draw() {
   ctx.lineTo(width, 5 * gridSize * scale);
   ctx.stroke();
 
-  const i = selected;
-
-  const tx = i % spriteWidth;
-  const ty = Math.floor(i / spriteWidth);
-
-  strokeRectTile(mouseTile.x, mouseTile.y, "#dddddd");
-  strokeRectTile(tx, ty, "#77ff77");
-
   ctx.translate(-0.5, -0.5);
 
   for (let y = 0; y < design.length; y++) {
@@ -142,6 +149,17 @@ function draw() {
       );
     }
   }
+
+  ctx.translate(0.5, 0.5);
+
+  const i = selected;
+  const tx = i % spriteWidth;
+  const ty = Math.floor(i / spriteWidth);
+
+  strokeRectTile(mouseTile.x, mouseTile.y, "#dddddd");
+  strokeRectTile(tx, ty, "#77ff77");
+
+  ctx.translate(-0.5, -0.5);
 }
 
 function strokeRectTile(x, y, color) {
@@ -153,3 +171,6 @@ function strokeRectTile(x, y, color) {
     gridSize * scale
   );
 }
+
+// TODO show coords on screen
+// TODO export function console.log(subset)

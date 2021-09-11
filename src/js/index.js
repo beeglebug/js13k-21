@@ -56,16 +56,14 @@ function loadComplete() {
   // generate pixel map cache
   // TODO multiple enemies / player animation frames
   pixelMaps.player = getPixelMap(spritesCtx, 0, 0, 32, 32);
-  pixelMaps.bullet = getPixelMap(spritesCtx, 32, 0, 9, 6);
-  pixelMaps.enemyBullet = getPixelMap(spritesCtx, 32, 8, 5, 5);
-  pixelMaps.enemy = getPixelMap(spritesCtx, 32, 32, 18, 18);
+  pixelMaps.bullet = getPixelMap(spritesCtx, 24, 0, 9, 6);
+  pixelMaps.enemyBullet = getPixelMap(spritesCtx, 24, 8, 5, 5);
 
   canvasPos = canvas.getBoundingClientRect();
 
   // needs doing after pixel maps
   createPlayer();
   createEnemies();
-  createBoss();
 
   // enterLevel
   currentLevel = loadLevel(level1);

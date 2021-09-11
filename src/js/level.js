@@ -28,35 +28,35 @@ const testLinePath4 = [
 const level1 = {
   waves: [
     {
-      enemyType: 0,
+      enemyType: "fighter2",
       time: 3000,
       count: 3,
       interval: 500,
       path: testLinePath1,
     },
     {
-      enemyType: 0,
+      enemyType: "frigate",
       time: 3000,
       count: 3,
-      interval: 500,
+      interval: 3000,
       path: testLinePath2,
     },
     {
-      enemyType: 0,
+      enemyType: "bomber",
       time: 6000,
       count: 3,
       interval: 500,
       path: testLinePath3,
     },
     {
-      enemyType: 0,
+      enemyType: "boss",
       time: 6000,
-      count: 3,
+      count: 1,
       interval: 500,
       path: testLinePath4,
     },
     {
-      enemyType: 0,
+      enemyType: "drone",
       time: 9000,
       count: 5,
       interval: 500,

@@ -8,11 +8,9 @@ function render() {
 
   traverse(scene, { x: 0, y: 0 });
 
-  // ctx.drawImage(bossCanvas, 100, 10);
-
   renderUI();
 
-  //debug();
+  // debug();
 }
 
 function traverse(entity, transform) {
@@ -32,13 +30,14 @@ function renderEntity(entity, transform) {
   if (source === undefined) return; // non renderable
   const worldX = Math.floor(transform.x + x - width / 2);
   const worldY = Math.floor(transform.y + y - height / 2);
+
   ctx.drawImage(source, sx, sy, width, height, worldX, worldY, width, height);
 }
 
 function flashSprite(target, delay = 100) {
   const original = target.source;
-  if (original === whiteSprites) return;
-  target.source = whiteSprites;
+  if (original === target.flashSprite) return;
+  target.source = target.flashSprite;
   setTimeout(() => (target.source = original), delay);
 }
 
@@ -61,15 +60,20 @@ function getTouchAreas(menu) {
 
 function debug() {
   if (state === STATE_MAIN_MENU) {
-    menu.touchAreas.forEach((item) => debugRect(item, "rgba(255,255,255,0.2)"));
+    menu.items.forEach((item) => debugRect(item.rect, "rgba(255,255,255,0.2)"));
   }
 
   if (state === STATE_GAME) {
     enemies.forEach((enemy) => {
       renderPath(enemy.path);
+      debugRect(enemy, "rgba(255,0,255,0.3)");
     });
 
-    debugRect(player, "rgba(255,0,255,0.8)");
+    debugRect(player, "rgba(255,0,255,0.3)");
+
+    bullets.forEach((bullet) => {
+      debugRect(bullet, "rgba(0,255,255,0.8)");
+    });
 
     enemyBullets.forEach((bullet) => {
       debugRect(bullet, "rgba(0,255,255,0.8)");

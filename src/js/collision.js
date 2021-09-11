@@ -1,3 +1,13 @@
+function getPixelMapFromCanvas(canvas) {
+  return getPixelMap(
+    canvas.getContext("2d"),
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
+}
+
 function getPixelMap(ctx, sx, sy, width, height) {
   const map = [];
   for (let y = 0; y < height; y++) {
