@@ -1,4 +1,4 @@
-const bezierPath1 = bakeBezierPath(
+const pathMiddleWavy = bakeBezierPath(
   [
     { x: width / 2, y: -50 },
     { x: width / 2 - 100, y: 100 },
@@ -8,12 +8,27 @@ const bezierPath1 = bakeBezierPath(
   16
 );
 
-const testLinePath1 = [
+const pathLeftAcross = [
+  { x: 20, y: -50 },
+  { x: width - 20, y: height + 50 },
+];
+
+const pathRightAcross = [
+  { x: width - 20, y: -50 },
+  { x: 20, y: height + 50 },
+];
+
+const pathLeftStraightDown = [
   { x: 50, y: -50 },
   { x: 50, y: height + 50 },
 ];
 
-const testLinePath2 = [
+const pathMiddleStraightDown = [
+  { x: width / 2, y: -50 },
+  { x: width / 2, y: height + 50 },
+];
+
+const pathRightStraightDown = [
   { x: width - 50, y: -50 },
   { x: width - 50, y: height + 50 },
 ];
@@ -31,25 +46,44 @@ const testLinePath4 = [
 const level1 = {
   waves: [
     {
-      enemyType: EnemyFighter,
-      time: 2000,
-      count: 2,
+      enemyType: EnemyDrone,
+      time: 1000,
+      count: 3,
       interval: 500,
-      path: testLinePath1,
+      path: pathMiddleStraightDown,
     },
-    // {
-    //   enemyType: EnemyFighter2,
-    //   time: 3000,
-    //   count: 3,
-    //   interval: 500,
-    //   path: testLinePath1,
-    // },
+    {
+      enemyType: EnemyDrone,
+      time: 2500,
+      count: 3,
+      interval: 500,
+      path: pathLeftStraightDown,
+    },
+    {
+      enemyType: EnemyDrone,
+      time: 2500,
+      count: 3,
+      interval: 500,
+      path: pathRightStraightDown,
+    },
+    {
+      enemyType: EnemyScout,
+      time: 5000,
+      count: 1,
+      path: pathLeftAcross,
+    },
+    {
+      enemyType: EnemyScout,
+      time: 5000,
+      count: 1,
+      path: pathRightAcross,
+    },
     // {
     //   enemyType: EnemyFrigate,
     //   time: 3000,
     //   count: 3,
     //   interval: 3000,
-    //   path: testLinePath2,
+    //   path: pathRightStraightDown,
     // },
     // {
     //   enemyType: EnemyBomber,
@@ -70,7 +104,7 @@ const level1 = {
     //   time: 9000,
     //   count: 5,
     //   interval: 500,
-    //   path: bezierPath1,
+    //   path: pathMiddleWavy,
     // },
   ],
 };
@@ -79,7 +113,7 @@ function loadLevel(level) {
   const events = [];
   for (let i = 0; i < level.waves.length; i++) {
     const wave = level.waves[i];
-    const { count, enemyType, time, interval, path } = wave;
+    const { count, enemyType, time, interval = 1, path } = wave;
     for (let j = 0; j < count; j++) {
       events.push([time + j * interval, spawnEnemy, [enemyType, path]]);
     }

@@ -64,13 +64,16 @@ class EnemyDrone extends Enemy {
 }
 
 class EnemyFighter extends Enemy {
+  hp = 2;
   constructor(x, y) {
     super(x, y);
     this.setSprite(enemySprites.fighter);
   }
 }
 
-class EnemyFighter2 extends Enemy {
+class EnemyScout extends Enemy {
+  hp = 3;
+  speed = 1.5;
   constructor(x, y) {
     super(x, y);
     this.setSprite(enemySprites.fighter2);
