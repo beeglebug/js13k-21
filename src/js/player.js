@@ -65,12 +65,20 @@ class Player extends Entity {
 
   damage(collision) {
     if (this.invulnerable) return;
+    flashSprite(this);
     spawnImpact(collision.x, collision.y);
+    zzfxP(soundHit);
     lives -= 1;
+    zzfxP(soundPlayerDie);
     if (lives === 0) {
       lose();
     } else {
-      respawn();
+      player.hasControl = false;
+      player.invulnerable = true;
+      // give it time to flash
+      setTimeout(() => {
+        respawn();
+      }, 50);
     }
   }
 

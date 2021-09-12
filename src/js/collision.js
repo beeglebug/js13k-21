@@ -174,9 +174,6 @@ function collision() {
 }
 
 function respawn() {
-  player.hasControl = false;
-  player.invulnerable = true;
-
   // move off screen
   player.x = width / 2;
   player.y = height + 50;

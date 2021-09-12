@@ -36,8 +36,10 @@ function newGame() {
 }
 
 function win() {
+  if (lives === 0) return; // stop win + lose happening
   state = STATE_WIN;
   player.hasControl = false;
+  zero(player.velocity);
   createTween(player, "x", width / 2, 1000);
   createTween(player, "y", 320, 1000);
   bullets = [];
@@ -51,6 +53,7 @@ function win() {
 function lose() {
   state = STATE_GAME_OVER;
   player.hasControl = false;
+  zero(player.velocity);
   setTimeout(() => {
     saveHiScore();
     state = STATE_MAIN_MENU;

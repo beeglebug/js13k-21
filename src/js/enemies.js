@@ -24,7 +24,9 @@ class Enemy extends Entity {
 
   shoot() {
     if (this.shootingCooldown > 0) return;
+    if (this.y < 0) return;
     this.shootingCooldown += this.weaponSpeed;
+    zzfxP(soundEnemyShoot);
     enemyShootAtPlayer(this);
   }
 

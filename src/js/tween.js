@@ -5,8 +5,11 @@ function updateTweens(delta) {
     const { obj, prop, to, increment, fn } = tween;
     const step = increment * delta * 1000;
     const value = obj[prop] + step;
-    const dist = Math.abs(value - to);
-    if (dist < Math.abs(step)) {
+    const dist = value - to;
+    // check for overshoot
+    const overshoot = (step < 0 && value < to) || (step > 0 && value > to);
+
+    if (overshoot || Math.abs(dist) < Math.abs(step)) {
       obj[prop] = to;
       tween.alive = false;
       return fn && fn();
@@ -19,6 +22,7 @@ function updateTweens(delta) {
 function createTween(obj, prop, to, time, fn) {
   const from = obj[prop];
   const increment = (to - from) / time;
+  if (from === to) return;
   _tweens.push({
     obj,
     prop,
