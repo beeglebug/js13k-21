@@ -68,7 +68,7 @@ class Player extends Entity {
     spawnImpact(collision.x, collision.y);
     lives -= 1;
     if (lives === 0) {
-      gameOver();
+      lose();
     } else {
       respawn();
     }

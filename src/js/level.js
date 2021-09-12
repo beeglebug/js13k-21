@@ -37,41 +37,41 @@ const level1 = {
       interval: 500,
       path: testLinePath1,
     },
-    {
-      enemyType: EnemyFighter2,
-      time: 3000,
-      count: 3,
-      interval: 500,
-      path: testLinePath1,
-    },
-    {
-      enemyType: EnemyFrigate,
-      time: 3000,
-      count: 3,
-      interval: 3000,
-      path: testLinePath2,
-    },
-    {
-      enemyType: EnemyBomber,
-      time: 6000,
-      count: 3,
-      interval: 500,
-      path: testLinePath3,
-    },
-    {
-      enemyType: EnemyBoss,
-      time: 6000,
-      count: 1,
-      interval: 500,
-      path: testLinePath4,
-    },
-    {
-      enemyType: EnemyDrone,
-      time: 9000,
-      count: 5,
-      interval: 500,
-      path: bezierPath1,
-    },
+    // {
+    //   enemyType: EnemyFighter2,
+    //   time: 3000,
+    //   count: 3,
+    //   interval: 500,
+    //   path: testLinePath1,
+    // },
+    // {
+    //   enemyType: EnemyFrigate,
+    //   time: 3000,
+    //   count: 3,
+    //   interval: 3000,
+    //   path: testLinePath2,
+    // },
+    // {
+    //   enemyType: EnemyBomber,
+    //   time: 6000,
+    //   count: 3,
+    //   interval: 500,
+    //   path: testLinePath3,
+    // },
+    // {
+    //   enemyType: EnemyBoss,
+    //   time: 6000,
+    //   count: 1,
+    //   interval: 500,
+    //   path: testLinePath4,
+    // },
+    // {
+    //   enemyType: EnemyDrone,
+    //   time: 9000,
+    //   count: 5,
+    //   interval: 500,
+    //   path: bezierPath1,
+    // },
   ],
 };
 
@@ -100,6 +100,13 @@ function updateLevel(delta) {
     if (time >= eventTime) {
       fn(...args);
       events.splice(i, 1);
+    }
+  }
+
+  if (events.length === 0) {
+    // check for end
+    if (enemies.length === 0 && enemyBullets.length === 0) {
+      win();
     }
   }
 }

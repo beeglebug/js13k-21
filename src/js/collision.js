@@ -39,6 +39,10 @@ function collidePixels(entity1, entity2, rect) {
       const y1 = clamp(iy + oy1, 0, Infinity);
       const x2 = clamp(ix + ox2, 0, Infinity);
       const y2 = clamp(iy + oy2, 0, Infinity);
+
+      // dont know what causes this but no time to fix
+      if (entity1.pixelMap[y1] === undefined) continue;
+      if (entity2.pixelMap[y2] === undefined) continue;
       const p1 = entity1.pixelMap[y1][x1];
       const p2 = entity2.pixelMap[y2][x2];
       if (p1 === true && p2 === true) return true;
@@ -167,13 +171,6 @@ function collision() {
   enemyBullets = enemyBullets.filter(isAlive);
   bullets = bullets.filter(isAlive);
   effects = effects.filter(isAlive);
-}
-
-function gameOver() {
-  state = STATE_GAME_OVER;
-  player.hasControl = false;
-  // go away
-  player.y = 9999;
 }
 
 function respawn() {

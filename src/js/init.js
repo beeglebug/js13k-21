@@ -23,8 +23,10 @@ let canvasPos;
 
 const world = { x: width / 2, y: height / 2, width, height };
 
+let hiScoreKey = "beeglebug_xiiivious_hiscore";
 let currentLevel;
 let score = 0;
+let hiScore = localStorage.getItem(hiScoreKey) || 0;
 let lives = 3;
 
 let enemyTemplates = {};

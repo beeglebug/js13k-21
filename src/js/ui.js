@@ -2,14 +2,47 @@ function renderUI() {
   if (state === STATE_MAIN_MENU) {
     renderLogo();
     renderMenu();
+    if (hiScore > 0) {
+      const text = `HI SCORE: ${hiScore}`;
+      const metrics = getTextMetrics(text, 2);
+      const x = width / 2 - metrics.width / 2;
+      renderText(ctx, yellowFont, text, x, 250, 2);
+    }
   }
 
   if (state === STATE_GAME) {
-    renderText(ctx, whiteFont, `Score: ${score}`, 5, 5);
+    let scoreText = "" + score;
+    let scoreFont = whiteFont;
+    if (score > hiScore) {
+      scoreFont = yellowFont;
+    }
+
+    renderText(ctx, whiteFont, "Score:", 5, 5);
+    renderText(ctx, scoreFont, scoreText, 33, 5);
     renderText(ctx, whiteFont, "Lives:", 140, 5);
+
     for (let i = 0; i < lives; i++) {
       const x = 168 + 10 * i;
       ctx.drawImage(sprites, 24, 16, 8, 5, x, 5, 8, 5);
+    }
+  }
+
+  if (state === STATE_GAME_OVER) {
+    ctx.drawImage(gameOverImage, 0, 100);
+  }
+
+  if (state === STATE_WIN) {
+    ctx.drawImage(winImage, 0, 100);
+    const text = `SCORE: ${score}`;
+    const metrics = getTextMetrics(text, 2);
+    const x = width / 2 - metrics.width / 2;
+    renderText(ctx, whiteFont, text, x, 250, 2);
+
+    if (score > hiScore) {
+      const text = `NEW HIGH SCORE`;
+      const metrics = getTextMetrics(text, 2);
+      const x = width / 2 - metrics.width / 2;
+      renderText(ctx, yellowFont, text, x, 280, 2);
     }
   }
 }
@@ -55,4 +88,26 @@ function createLogo() {
   renderText(logoCtx, whiteFont, "S", 190, 10, 8);
 
   return logoCanvas;
+}
+
+function createGameOverImage() {
+  const [canvas, ctx] = createCanvas(width, 100);
+  const text = "XXXX";
+  const scale = 5;
+  const metrics = getTextMetrics(text, scale);
+  const x = width / 2 - metrics.width / 2;
+  renderText(ctx, redFont, "GAME", x, 10, scale);
+  renderText(ctx, redFont, "OVER", x, 40, scale);
+  return canvas;
+}
+
+function createWinImage() {
+  const [canvas, ctx] = createCanvas(width, 100);
+  const text = "XXXXX";
+  const scale = 5;
+  const metrics = getTextMetrics(text, scale);
+  const x = width / 2 - metrics.width / 2;
+  renderText(ctx, greenFont, "LEVEL", x, 10, scale);
+  renderText(ctx, greenFont, "CLEAR", x, 40, scale);
+  return canvas;
 }

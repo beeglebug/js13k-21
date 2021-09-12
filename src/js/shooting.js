@@ -18,7 +18,7 @@ function enemyShootAtPlayer(enemy) {
   enemyBullets.push(bullet);
 }
 
-function enemyShoot(enemy, count) {
+function enemyShootSpread(enemy, count) {
   const spread = Math.PI / 2; // 90 degree arc
   const increment = spread / count;
   const initial = { x: 0, y: 1 };

@@ -32,9 +32,12 @@ let enemies = [];
 let effects = [];
 
 let whiteFont;
+let yellowFont;
+let redFont;
 
 let logoForeground;
 let logoBackground;
+let gameOverImage;
 
 function loadComplete() {
   whiteSprites = tint(img, "#FFFFFF");
@@ -43,9 +46,17 @@ function loadComplete() {
   whiteFontCtx.drawImage(img, 0, 59, 132, 5, 0, 0, 132, 5);
 
   whiteFont = whiteFontCanvas;
+  yellowFont = tint(whiteFontCanvas, "#FFFF00");
+  redFont = tint(whiteFontCanvas, "#FF0000");
+  greenFont = tint(whiteFontCanvas, "#00FF00");
 
   logoBackground = createLogo();
   logoForeground = tint(logoBackground, "#5b6ee1");
+
+  gameOverImage = createGameOverImage();
+  winImage = createWinImage();
+
+  getTouchAreas(menu);
 
   // generate pixel map cache
   // TODO multiple enemies / player animation frames
@@ -58,9 +69,6 @@ function loadComplete() {
   // needs doing after pixel maps
   player = new Player();
   enemySprites = createEnemySprites();
-
-  // enterLevel
-  currentLevel = loadLevel(level1);
 
   enterMenu();
 

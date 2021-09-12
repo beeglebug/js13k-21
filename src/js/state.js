@@ -2,6 +2,7 @@ const STATE_MAIN_MENU = 0;
 const STATE_GAME = 1;
 const STATE_SETTINGS = 2;
 const STATE_GAME_OVER = 3;
+const STATE_WIN = 4;
 
 let state = STATE_MAIN_MENU;
 
@@ -12,28 +13,59 @@ let menu = {
   items: [
     {
       text: "new game",
-      fn: () => {
-        state = STATE_GAME;
-        enterGame();
-        // TODO setState(STATE_GAME)
-        // TODO reset level etc
-      },
+      fn: newGame,
     },
   ],
 };
 
 function enterMenu() {
   menu.logoY = -100;
-  getTouchAreas(menu);
   player.y = height + 50;
   createTween(menu, "logoY", 80, 1000);
   createTween(player, "y", 320, 1000);
 }
 
-function enterGame() {
+function newGame() {
+  state = STATE_GAME;
+  currentLevel = loadLevel(level1);
+  score = 0;
+  lives = 3;
   setTimeout(() => {
     player.hasControl = true;
   }, 500);
 }
 
-function enterGameOver() {}
+function win() {
+  state = STATE_WIN;
+  player.hasControl = false;
+  createTween(player, "x", width / 2, 1000);
+  createTween(player, "y", 320, 1000);
+  bullets = [];
+  effects = [];
+  setTimeout(() => {
+    saveHiScore();
+    state = STATE_MAIN_MENU;
+  }, 3000);
+}
+
+function lose() {
+  state = STATE_GAME_OVER;
+  player.hasControl = false;
+  setTimeout(() => {
+    saveHiScore();
+    state = STATE_MAIN_MENU;
+    enemies = [];
+    enemyBullets = [];
+    bullets = [];
+    effects = [];
+    // go away
+    player.y = 9999;
+  }, 3000);
+}
+
+function saveHiScore() {
+  if (score > hiScore) {
+    localStorage.setItem(hiScoreKey, score);
+    hiScore = score;
+  }
+}
