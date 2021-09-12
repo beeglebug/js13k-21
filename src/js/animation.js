@@ -23,26 +23,31 @@ const engineFramesBoost = [
 
 let animated = [];
 
-function spawnImpact(x, y) {
-  const frame = impactFrames[0];
-  const entity = {
-    x: x,
-    y: y,
-    width: frame.width,
-    height: frame.height,
-    alive: true,
-    source: sprites,
-    sx: frame.x,
-    sy: frame.y,
-    frames: impactFrames,
-    currentFrame: 0,
-    counter: 0,
-    fps: 10,
-    loop: false,
-  };
+class AnimatedEntity extends Entity {
+  frames = [];
+  currentFrame = 0;
+  counter = 0;
+  fps = 12;
+  loop = false;
+}
 
-  scene.children.push(entity);
-  animated.push(entity);
+class Impact extends AnimatedEntity {
+  frames = impactFrames;
+  constructor(x, y) {
+    super(x, y);
+    this.source = sprites;
+    const frame = impactFrames[0];
+    this.width = frame.width;
+    this.height = frame.height;
+    this.sx = frame.x;
+    this.sy = frame.y;
+  }
+}
+
+function spawnImpact(x, y) {
+  const impact = new Impact(x, y);
+  effects.push(impact);
+  animated.push(impact);
 }
 
 function updateAnimations(delta) {

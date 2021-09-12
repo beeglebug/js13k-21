@@ -52,7 +52,7 @@ function handleInput() {
   if (state !== STATE_GAME || player.hasControl === false) return;
 
   if (keyDown(KEY_SPACE)) {
-    shoot();
+    player.shoot();
   }
 
   if (keyDown(KEY_W, KEY_Z, KEY_UP)) {

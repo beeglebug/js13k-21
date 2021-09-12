@@ -26,16 +26,10 @@ const img = new Image();
 img.onload = loadComplete;
 img.src = "sprites.png";
 
-// TODO make into display nodes with children
 let bullets = [];
 let enemyBullets = [];
 let enemies = [];
-
-const scene = {
-  x: 0,
-  y: 0,
-  children: [],
-};
+let effects = [];
 
 let whiteFont;
 
@@ -55,15 +49,15 @@ function loadComplete() {
 
   // generate pixel map cache
   // TODO multiple enemies / player animation frames
-  pixelMaps.player = getPixelMap(spritesCtx, 0, 0, 32, 32);
+
   pixelMaps.bullet = getPixelMap(spritesCtx, 24, 0, 9, 6);
   pixelMaps.enemyBullet = getPixelMap(spritesCtx, 24, 8, 5, 5);
 
   canvasPos = canvas.getBoundingClientRect();
 
   // needs doing after pixel maps
-  createPlayer();
-  createEnemies();
+  player = new Player();
+  enemySprites = createEnemySprites();
 
   // enterLevel
   currentLevel = loadLevel(level1);
@@ -83,8 +77,6 @@ function loop() {
   render();
 }
 
-let shootingCooldown = 0;
-
 function update(delta) {
   if (running === false) return;
 
@@ -92,44 +84,38 @@ function update(delta) {
 
   if (state === STATE_GAME) {
     // reset animations etc
-    player.children[0].frames = engineFrames;
-    player.children[1].frames = engineFrames;
+    player.engineTrailLeft.frames = engineFrames;
+    player.engineTrailRight.frames = engineFrames;
     player.sy = 0;
-    set(player.children[0], -9, 10);
-    set(player.children[1], 9, 10);
+    set(player.engineTrailLeft, -9, 10);
+    set(player.engineTrailRight, 9, 10);
 
     if (player.velocity.x > 0) {
       player.sy = 16;
-      set(player.children[0], -7, 9);
-      set(player.children[1], 7, 12);
-      player.children[0].frames = engineFramesBoost;
+      set(player.engineTrailLeft, -7, 9);
+      set(player.engineTrailRight, 7, 12);
+      player.engineTrailLeft.frames = engineFramesBoost;
     }
 
     if (player.velocity.x < 0) {
       player.sy = 32;
-      set(player.children[0], -7, 12);
-      set(player.children[1], 7, 9);
-      player.children[1].frames = engineFramesBoost;
+      set(player.engineTrailLeft, -7, 12);
+      set(player.engineTrailRight, 7, 9);
+      player.engineTrailRight.frames = engineFramesBoost;
     }
 
     if (player.velocity.y < 0) {
-      player.children[0].frames = engineFramesBoost;
-      player.children[1].frames = engineFramesBoost;
+      player.engineTrailLeft.frames = engineFramesBoost;
+      player.engineTrailRight.frames = engineFramesBoost;
     }
   }
 
   if (state === STATE_GAME || state === STATE_GAME_OVER) {
-    [player, ...bullets, ...enemyBullets].forEach((item) => {
-      if (item.velocity) {
-        item.x += item.velocity.x;
-        item.y += item.velocity.y;
-      }
-    });
+    player.update(delta);
+    enemies.forEach((entity) => entity.update(delta));
+    enemyBullets.forEach((entity) => entity.update(delta));
+    bullets.forEach((entity) => entity.update(delta));
 
-    shootingCooldown -= delta * 1000;
-    if (shootingCooldown < 0) shootingCooldown = 0;
-
-    updateEnemies(delta);
     updateLevel(delta);
     collision();
   }

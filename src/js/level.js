@@ -1,9 +1,12 @@
-const testPath = [
-  { x: width / 2, y: 0 },
-  { x: width / 2 - 100, y: 100 },
-  { x: width / 2 + 100, y: height - 100 },
-  { x: width / 2, y: height },
-];
+const bezierPath1 = bakeBezierPath(
+  [
+    { x: width / 2, y: -50 },
+    { x: width / 2 - 100, y: 100 },
+    { x: width / 2 + 100, y: height - 100 },
+    { x: width / 2, y: height },
+  ],
+  16
+);
 
 const testLinePath1 = [
   { x: 50, y: -50 },
@@ -28,39 +31,46 @@ const testLinePath4 = [
 const level1 = {
   waves: [
     {
-      enemyType: "fighter2",
+      enemyType: EnemyFighter,
+      time: 2000,
+      count: 2,
+      interval: 500,
+      path: testLinePath1,
+    },
+    {
+      enemyType: EnemyFighter2,
       time: 3000,
       count: 3,
       interval: 500,
       path: testLinePath1,
     },
     {
-      enemyType: "frigate",
+      enemyType: EnemyFrigate,
       time: 3000,
       count: 3,
       interval: 3000,
       path: testLinePath2,
     },
     {
-      enemyType: "bomber",
+      enemyType: EnemyBomber,
       time: 6000,
       count: 3,
       interval: 500,
       path: testLinePath3,
     },
     {
-      enemyType: "boss",
+      enemyType: EnemyBoss,
       time: 6000,
       count: 1,
       interval: 500,
       path: testLinePath4,
     },
     {
-      enemyType: "drone",
+      enemyType: EnemyDrone,
       time: 9000,
       count: 5,
       interval: 500,
-      path: precomputeBezierPath(testPath, 16),
+      path: bezierPath1,
     },
   ],
 };

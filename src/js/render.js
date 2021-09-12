@@ -4,41 +4,44 @@ function render() {
 
   renderBackground();
 
-  // ctx.drawImage(planetCanvas, 0, Math.floor(planetPosition), 512, 512);
-
-  traverse(scene, { x: 0, y: 0 });
+  player.render();
+  enemies.forEach((entity) => entity.render());
+  enemyBullets.forEach((entity) => entity.render());
+  bullets.forEach((entity) => entity.render());
+  effects.forEach((entity) => entity.render());
 
   renderUI();
 
   // debug();
 }
 
-function traverse(entity, transform) {
-  if (entity.visible === false) return;
-  renderEntity(entity, transform);
-
-  if (entity.children === undefined) return;
-
-  for (let i = 0, l = entity.children.length; i < l; i++) {
-    const localTransform = add(transform, entity);
-    traverse(entity.children[i], localTransform);
+function renderEntity(entity, offset) {
+  let { x, y, sx, sy, source, width, height } = entity;
+  if (offset) {
+    x += offset.x;
+    y += offset.y;
   }
-}
-
-function renderEntity(entity, transform) {
-  const { x, y, sx, sy, source, width, height, visible } = entity;
-  if (source === undefined) return; // non renderable
-  const worldX = Math.floor(transform.x + x - width / 2);
-  const worldY = Math.floor(transform.y + y - height / 2);
-
-  ctx.drawImage(source, sx, sy, width, height, worldX, worldY, width, height);
+  ctx.drawImage(
+    source,
+    sx,
+    sy,
+    width,
+    height,
+    x - width / 2,
+    y - height / 2,
+    width,
+    height
+  );
 }
 
 function flashSprite(target, delay = 100) {
   const original = target.source;
   if (original === target.flashSprite) return;
   target.source = target.flashSprite;
-  setTimeout(() => (target.source = original), delay);
+
+  setTimeout(() => {
+    target.source = original;
+  }, delay);
 }
 
 function getTouchAreas(menu) {

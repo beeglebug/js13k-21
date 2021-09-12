@@ -15,6 +15,7 @@
 
 #### DONE
 
+- enemy variations
 - destroy enemies which go off screen
 - generic clock for animation / shooting / spawning
 - follow path

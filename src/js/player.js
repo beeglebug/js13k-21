@@ -1,52 +1,82 @@
 let player;
 
-function createPlayer() {
-  const frame = engineFrames[0];
+class Player extends Entity {
+  width = 24;
+  height = 16;
+  sx = 0;
+  sy = 0;
+  speed = 2;
+  weaponSpeed = 200;
+  shootingCooldown = 0;
 
-  const engineTrailLeft = {
-    x: -9,
-    y: 10,
-    width: frame.width,
-    height: frame.height,
-    alive: true,
-    source: sprites,
-    sx: frame.x,
-    sy: frame.y,
-    frames: engineFrames,
-    currentFrame: 0,
-    counter: 0,
-    fps: 10,
-    loop: true,
-  };
+  hasControl = false;
+  invulnerable = false;
 
-  const engineTrailRight = {
-    ...engineTrailLeft,
-    x: 9,
-  };
+  constructor() {
+    super(width / 2, 0);
+    this.source = sprites;
+    this.flashSprite = whiteSprites;
+    this.pixelMap = getPixelMap(spritesCtx, 0, 0, 32, 32);
 
-  player = {
-    x: width / 2,
-    y: height - 100,
-    width: 24,
-    height: 16,
-    alive: true,
-    source: sprites,
-    flashSprite: whiteSprites,
-    sx: 0,
-    sy: 0,
-    speed: 2,
-    weaponSpeed: 200,
-    velocity: {
-      x: 0,
-      y: 0,
-    },
-    children: [engineTrailLeft, engineTrailRight],
-    pixelMap: pixelMaps.player,
-    hasControl: false,
-    invulnerable: false,
-    visible: true,
-  };
+    const frame = engineFrames[0];
 
-  scene.children.unshift(player);
-  animated.push(engineTrailLeft, engineTrailRight);
+    const engineTrailLeft = {
+      x: -9,
+      y: 10,
+      width: frame.width,
+      height: frame.height,
+      alive: true,
+      source: sprites,
+      sx: frame.x,
+      sy: frame.y,
+      frames: engineFrames,
+      currentFrame: 0,
+      counter: 0,
+      fps: 10,
+      loop: true,
+    };
+
+    const engineTrailRight = {
+      ...engineTrailLeft,
+      x: 9,
+    };
+
+    this.engineTrailLeft = engineTrailLeft;
+    this.engineTrailRight = engineTrailRight;
+
+    animated.push(engineTrailLeft, engineTrailRight);
+  }
+
+  update(delta) {
+    super.update(delta);
+    this.shootingCooldown -= delta * 1000;
+    if (this.shootingCooldown < 0) this.shootingCooldown = 0;
+  }
+
+  shoot() {
+    if (this.shootingCooldown > 0) return;
+    this.shootingCooldown += this.weaponSpeed;
+    zzfxP(soundShoot);
+
+    const bullet = new Bullet(this.x, this.y);
+
+    bullets.push(bullet);
+  }
+
+  damage(collision) {
+    if (this.invulnerable) return;
+    spawnImpact(collision.x, collision.y);
+    lives -= 1;
+    if (lives === 0) {
+      gameOver();
+    } else {
+      respawn();
+    }
+  }
+
+  render() {
+    renderEntity(this);
+    renderEntity(this.engineTrailLeft, this);
+    renderEntity(this.engineTrailRight, this);
+  }
 }

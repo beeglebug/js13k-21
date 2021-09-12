@@ -9,6 +9,7 @@ let running = true;
 
 let pixelMaps = {};
 let whiteSprites;
+let enemySprites;
 
 const [canvas, ctx] = createCanvas(width, height);
 const [sprites, spritesCtx] = createCanvas(256, 256);

@@ -1,20 +1,20 @@
-function enemyShootSingle(enemy) {
+function enemyShootAhead(enemy) {
+  const bullet = new EnemyBullet(enemy.x, enemy.y, {
+    x: 0,
+    y: enemy.bulletSpeed,
+  });
+  enemyBullets.push(bullet);
+}
+
+function enemyShootAtPlayer(enemy) {
   const velocity = normalize(sub(player, enemy));
 
-  const bullet = {
-    x: enemy.x,
-    y: enemy.y,
-    width: 5,
-    height: 5,
-    alive: true,
-    pixelMap: pixelMaps.enemyBullet,
-    source: sprites,
-    sx: 24,
-    sy: 8,
-    velocity: multiply(velocity, 1.5),
-  };
+  const bullet = new EnemyBullet(
+    enemy.x,
+    enemy.y,
+    multiply(velocity, enemy.bulletSpeed)
+  );
 
-  scene.children.push(bullet);
   enemyBullets.push(bullet);
 }
 
@@ -43,29 +43,33 @@ function enemyShoot(enemy, count) {
   // rotate(initial, -0.05);
 }
 
-function shootForward() {
-  const bullet = {
-    x: player.x,
-    y: player.y,
-    width: 9,
-    height: 6,
-    alive: true,
-    pixelMap: pixelMaps.bullet,
-    source: sprites,
-    sx: 24,
-    sy: 0,
-    velocity: {
-      x: 0,
-      y: -5,
-    },
-  };
-  scene.children.push(bullet);
-  bullets.push(bullet);
+class EnemyBullet extends Entity {
+  width = 5;
+  height = 5;
+  sx = 24;
+  sy = 8;
+
+  constructor(x, y, velocity) {
+    super(x, y);
+    this.velocity = velocity;
+    this.pixelMap = pixelMaps.bullet;
+    this.source = sprites;
+  }
 }
 
-let shoot = () => {
-  if (shootingCooldown > 0) return;
-  shootingCooldown += player.weaponSpeed;
-  zzfxP(soundShoot);
-  shootForward();
-};
+class Bullet extends Entity {
+  width = 9;
+  height = 7;
+  sx = 24;
+  sy = 0;
+  velocity = {
+    x: 0,
+    y: -5,
+  };
+
+  constructor(x, y) {
+    super(x, y);
+    this.pixelMap = pixelMaps.bullet;
+    this.source = sprites;
+  }
+}

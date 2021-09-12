@@ -15,7 +15,7 @@ function bezier(path, t) {
   };
 }
 
-function precomputeBezierPath(path, resolution) {
+function bakeBezierPath(path, resolution) {
   const accuracy = 1 / resolution;
   const points = [];
 
