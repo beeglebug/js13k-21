@@ -1,8 +1,9 @@
-function enemyShootAhead(enemy) {
-  const bullet = new EnemyBullet(enemy.x, enemy.y, {
-    x: 0,
-    y: enemy.bulletSpeed,
-  });
+function enemyShootDirection(enemy, velocity) {
+  const bullet = new EnemyBullet(
+    enemy.x,
+    enemy.y,
+    multiply(velocity, enemy.bulletSpeed)
+  );
   enemyBullets.push(bullet);
 }
 
@@ -25,19 +26,11 @@ function enemyShootSpread(enemy, count) {
   const start = rotate(initial, -increment * Math.round(count / 2));
   times(count, () => {
     const velocity = { ...rotate(start, increment) };
-    const bullet = {
-      x: enemy.x,
-      y: enemy.y,
-      width: 5,
-      height: 5,
-      alive: true,
-      pixelMap: pixelMaps.enemyBullet,
-      source: sprites,
-      sx: 24,
-      sy: 8,
-      velocity: multiply(velocity, 1.5),
-    };
-    scene.children.push(bullet);
+    const bullet = new EnemyBullet(
+      enemy.x,
+      enemy.y,
+      multiply(velocity, enemy.bulletSpeed)
+    );
     enemyBullets.push(bullet);
   });
   // rotate(initial, -0.05);

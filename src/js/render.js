@@ -11,7 +11,6 @@ function render() {
   effects.forEach((entity) => entity.render());
 
   renderUI();
-
   // debug();
 }
 
@@ -27,8 +26,8 @@ function renderEntity(entity, offset) {
     sy,
     width,
     height,
-    x - width / 2,
-    y - height / 2,
+    Math.floor(x - width / 2),
+    Math.floor(y - height / 2),
     width,
     height
   );
@@ -130,4 +129,33 @@ function renderPath(path) {
   rest.forEach((v) => {
     ctx.fillRect(clamp(v.x, 0, width) - 1, clamp(v.y, 0, height) - 1, 2, 2);
   });
+}
+
+function renderBezier(path) {
+  const steps = 20;
+  const accuracy = 1 / steps;
+  const [p0, p1, p2, p3] = path;
+
+  ctx.strokeStyle = "#FF00FF";
+  ctx.lineWidth = 0.5;
+
+  ctx.beginPath();
+  ctx.moveTo(p0.x, p0.y);
+  for (let i = 0; i <= 1; i += accuracy) {
+    const v = bezier(path, i);
+    ctx.lineTo(v.x, v.y);
+    ctx.fillStyle = "#FFFFFF";
+    ctx.fillRect(clamp(v.x, 0, width) - 1, clamp(v.y, 0, height) - 1, 2, 2);
+  }
+  ctx.lineTo(p3.x, p3.y);
+
+  ctx.stroke();
+  ctx.closePath();
+
+  ctx.fillStyle = "#FF0000";
+  ctx.fillRect(clamp(p0.x, 0, width) - 1, clamp(p0.y, 0, height) - 1, 2, 2);
+  ctx.fillRect(clamp(p3.x, 0, width) - 1, clamp(p3.y, 0, height) - 1, 2, 2);
+  ctx.fillStyle = "#00FF00";
+  ctx.fillRect(clamp(p1.x, 0, width) - 1, clamp(p1.y, 0, height) - 1, 2, 2);
+  ctx.fillRect(clamp(p2.x, 0, width) - 1, clamp(p2.y, 0, height) - 1, 2, 2);
 }
